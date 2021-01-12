@@ -1,18 +1,18 @@
 package com.qyf.rpc.annotion;
 
-import com.qyf.rpc.remoting.netty.invoke.RpcConfigConfigurationRegistrar;
+import com.qyf.rpc.register.zookeeper.RpcClientRegistrar;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
 
-@Target(ElementType.FIELD)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Import(RpcConfigConfigurationRegistrar.class)
+@Import(RpcClientRegistrar.class)
 @Documented
 @Inherited
 /**
- * 开启rpc
+ * 开启rpc客户端
  */
-public @interface EnableRpc {
+public @interface EnableRpcClient {
     String value();
 }
