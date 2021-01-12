@@ -18,7 +18,7 @@ import java.util.Set;
 
 public class ClassPathRpcScanner extends ClassPathBeanDefinitionScanner {
 
-    private RpcFactoryBean<?> rpcFactoryBean = new RpcFactoryBean<Object>();
+    private RpcFactoryBean<?> rpcFactoryBean = new RpcFactoryBean<>();
 
     private Class<? extends Annotation> annotationClass;
     public void setAnnotationClass(Class<? extends Annotation> annotationClass) {

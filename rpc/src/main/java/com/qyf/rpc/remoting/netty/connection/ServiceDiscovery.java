@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-@Component
+//@Component
 //服务发现
 public class ServiceDiscovery {
 

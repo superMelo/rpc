@@ -23,7 +23,6 @@ import javax.annotation.PreDestroy;
 import java.net.SocketAddress;
 import java.util.concurrent.SynchronousQueue;
 
-@Component
 public class NettyClient {
 
     Logger log = LoggerFactory.getLogger(this.getClass());
