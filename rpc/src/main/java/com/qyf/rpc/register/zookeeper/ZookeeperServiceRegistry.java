@@ -18,7 +18,7 @@ public class ZookeeperServiceRegistry {
 
     //zk服务注册目录
     private static final String ZK_REGISTRY_PATH = "/RPC";
-    public void registry(String data) throws Exception{
+    public void register(String data) throws Exception{
         if (StringUtil.isNotEmpty(data)){
             if (curator != null){
                 //添加服务根节点

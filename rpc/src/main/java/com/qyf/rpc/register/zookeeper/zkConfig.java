@@ -27,6 +27,7 @@ public class zkConfig {
                 .connectionTimeoutMs(CONNECTIONT_IMEOUT_MS)
                 .sessionTimeoutMs(SESSION_TIMEOUT)
                 .retryPolicy(policy).build();
+        curatorFramework.start();
         return curatorFramework;
     }
 }
