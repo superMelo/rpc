@@ -2,8 +2,11 @@ package com.qyf.rpc.register.zookeeper;
 
 import com.qyf.rpc.annotion.EnableRpcClient;
 import com.qyf.rpc.remoting.netty.client.NettyClient;
+import com.qyf.rpc.remoting.netty.connection.ConnectManage;
 import com.qyf.rpc.remoting.netty.connection.ServiceDiscovery;
+import com.qyf.rpc.remoting.netty.handle.NettyClientHandle;
 import com.qyf.rpc.remoting.netty.invoke.ClassPathRpcScanner;
+import com.qyf.rpc.remoting.netty.invoke.RpcFactory;
 import org.springframework.beans.factory.support.*;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
@@ -25,9 +28,25 @@ public class RpcClientRegistrar implements ImportBeanDefinitionRegistrar{
             GenericBeanDefinition definition = (GenericBeanDefinition) builder.getRawBeanDefinition();
             registry.registerBeanDefinition("nettyClient", definition);
             //加载服务发现
-            BeanDefinitionBuilder builder1 = BeanDefinitionBuilder.genericBeanDefinition(ServiceDiscovery.class);
-            GenericBeanDefinition serviceDiscovery = (GenericBeanDefinition) builder1.getRawBeanDefinition();
+            BeanDefinitionBuilder serviceDiscoveryBuilder = BeanDefinitionBuilder.genericBeanDefinition(ServiceDiscovery.class);
+            GenericBeanDefinition serviceDiscovery = (GenericBeanDefinition) serviceDiscoveryBuilder.getRawBeanDefinition();
             registry.registerBeanDefinition("serviceDiscovery", serviceDiscovery);
+
+            //加载连接管理
+            BeanDefinitionBuilder connectManageBuilder = BeanDefinitionBuilder.genericBeanDefinition(ConnectManage.class);
+            GenericBeanDefinition connectManage = (GenericBeanDefinition) connectManageBuilder.getRawBeanDefinition();
+            registry.registerBeanDefinition("connectManage", connectManage);
+
+            //加载handle
+            BeanDefinitionBuilder nettyClientHandleBuilder = BeanDefinitionBuilder.genericBeanDefinition(NettyClientHandle.class);
+            GenericBeanDefinition nettyClientHandle = (GenericBeanDefinition) nettyClientHandleBuilder.getRawBeanDefinition();
+            registry.registerBeanDefinition("nettyClientHandle", nettyClientHandle);
+
+            //加载handle
+            BeanDefinitionBuilder rpcFactoryBuilder = BeanDefinitionBuilder.genericBeanDefinition(RpcFactory.class);
+            GenericBeanDefinition  rpcFactory = (GenericBeanDefinition) rpcFactoryBuilder.getRawBeanDefinition();
+            registry.registerBeanDefinition(" rpcFactory",  rpcFactory);
+
             ClassPathRpcScanner scanner = new ClassPathRpcScanner(registry);
 
             scanner.setAnnotationClass(null);
