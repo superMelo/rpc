@@ -17,10 +17,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Map;
 
-/**
- * Created by MACHENIKE on 2018-12-03.
- */
-@Component
+//@Component
 public class RpcFactory<T> implements InvocationHandler {
 
     @Autowired

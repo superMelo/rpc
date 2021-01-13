@@ -20,7 +20,7 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.SynchronousQueue;
 
-@Component
+//@Component
 @ChannelHandler.Sharable
 public class NettyClientHandle extends ChannelInboundHandlerAdapter {
 

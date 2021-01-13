@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +31,8 @@ public class NettyServer implements ApplicationContextAware,InitializingBean {
     private static final EventLoopGroup workerGroup = new NioEventLoopGroup(4);
 
     private Map<String, Object> serviceMap = new HashMap<>();
+
+    private Map<String, Method> methodMap = new HashMap<>();
 
     @Value("${rpc.server.address}")
     private String serverAddress;
@@ -48,7 +51,13 @@ public class NettyServer implements ApplicationContextAware,InitializingBean {
 
             for (Class<?> inter : interfaces){
                 String interfaceName = inter.getName();
+                String[] split = interfaceName.split("\\.");
+                interfaceName = split[split.length - 1];
                 logger.info("加载服务类: {}", interfaceName);
+                Method[] methods = inter.getMethods();
+                for (Method method : methods) {
+                    methodMap.put(method.getName(), method);
+                }
                 serviceMap.put(interfaceName, serviceBean);
             }
         }

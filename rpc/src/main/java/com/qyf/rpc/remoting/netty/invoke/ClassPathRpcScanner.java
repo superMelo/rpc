@@ -62,19 +62,23 @@ public class ClassPathRpcScanner extends ClassPathBeanDefinitionScanner {
         }
 
         // exclude package-info.java
-        addExcludeFilter(new TypeFilter() {
-            @Override
-            public boolean match(MetadataReader metadataReader,
-                                 MetadataReaderFactory metadataReaderFactory)
-                    throws IOException {
-                String className = metadataReader.getClassMetadata()
-                        .getClassName();
-                return className.endsWith("package-info");
-            }
+//        addExcludeFilter(new TypeFilter() {
+//            @Override
+//            public boolean match(MetadataReader metadataReader,
+//                                 MetadataReaderFactory metadataReaderFactory)
+//                    throws IOException {
+//                String className = metadataReader.getClassMetadata()
+//                        .getClassName();
+//                return className.endsWith("package-info");
+//            }
+//        });
+        addExcludeFilter((metadataReader, metadataReaderFactory)->{
+            String className = metadataReader.getClassMetadata()
+                    .getClassName();
+            return className.endsWith("package-info");
         });
     }
-    private void processBeanDefinitions(
-            Set<BeanDefinitionHolder> beanDefinitions) {
+    private void processBeanDefinitions(Set<BeanDefinitionHolder> beanDefinitions) {
 
         GenericBeanDefinition definition;
 

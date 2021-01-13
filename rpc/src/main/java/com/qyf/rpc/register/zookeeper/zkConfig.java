@@ -14,7 +14,7 @@ public class zkConfig {
     @Value("${registry.address}")
     private String registry;
 
-    private static final int CONNECTIONT_IMEOUT_MS = 20000;
+    private static final int CONNECTION_TIMEOUT_MS = 20000;
 
     private static final int SESSION_TIMEOUT = 20000;
 
@@ -24,7 +24,7 @@ public class zkConfig {
         //重试策略，初试时间1秒，重试10次
         RetryPolicy policy = new ExponentialBackoffRetry(1000, 10);
         CuratorFramework curatorFramework = CuratorFrameworkFactory.builder().connectString(registry)
-                .connectionTimeoutMs(CONNECTIONT_IMEOUT_MS)
+                .connectionTimeoutMs(CONNECTION_TIMEOUT_MS)
                 .sessionTimeoutMs(SESSION_TIMEOUT)
                 .retryPolicy(policy).build();
         curatorFramework.start();

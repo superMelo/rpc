@@ -44,15 +44,14 @@ public class ServiceDiscovery {
 
     private void watchNode(final CuratorFramework client) throws Exception {
         PathChildrenCache cache = new PathChildrenCache(client, ZK_REGISTRY_PATH, true);
-        List<ChildData> nodes = new LinkedList<>();
+        List<String> nodes = client.getChildren().forPath(ZK_REGISTRY_PATH);
         cache.getListenable().addListener((curatorFramework, event)->{
             logger.info("监听到子节点数据变化{}", JSONObject.toJSONString(event.getInitialData()));
             addressList.clear();
-            nodes.addAll(event.getInitialData());
-            getNodeData(event.getInitialData());
+            getNodeData(client.getChildren().forPath(ZK_REGISTRY_PATH), client);
             updateConnectedServer();
         });
-        getNodeData(nodes);
+        getNodeData(nodes, client);
         logger.info("已发现服务列表...{}", JSONObject.toJSONString(addressList));
         updateConnectedServer();
     }
@@ -60,10 +59,10 @@ public class ServiceDiscovery {
         connectManage.updateConnectServer(addressList);
     }
 
-    private void getNodeData(List<ChildData> nodes) throws Exception {
+    private void getNodeData(List<String> nodes, CuratorFramework client) throws Exception {
         logger.info("/rpc子节点数据为:{}", JSONObject.toJSONString(nodes));
-        for(ChildData node:nodes){
-            String address = curator.getData().forPath(ZK_REGISTRY_PATH + "/" + node.getPath()).toString();
+        for(String node:nodes){
+            String address = new String(client.getData().forPath(ZK_REGISTRY_PATH + "/" + node));
             addressList.add(address);
         }
     }

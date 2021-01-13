@@ -17,7 +17,7 @@ public class ZookeeperServiceRegistry {
     private CuratorFramework curator;
 
     //zk服务注册目录
-    private static final String ZK_REGISTRY_PATH = "/RPC";
+    private static final String ZK_REGISTRY_PATH = "/rpc";
     public void register(String data) throws Exception{
         if (StringUtil.isNotEmpty(data)){
             if (curator != null){
@@ -41,6 +41,6 @@ public class ZookeeperServiceRegistry {
 
     private void createNode(CuratorFramework curator, String data) throws Exception {
         curator.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL_SEQUENTIAL)
-                .forPath(ZK_REGISTRY_PATH +"provider",data.getBytes(Charset.defaultCharset()));
+                .forPath(ZK_REGISTRY_PATH + "/provider",data.getBytes(Charset.defaultCharset()));
     }
 }

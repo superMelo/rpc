@@ -63,14 +63,16 @@ public class NettyServerHandle extends ChannelInboundHandlerAdapter {
      */
     private Object handler(Request request) throws Throwable{
         String className = request.getClassName();
+        String[] split = className.split("\\.");
+        className = split[split.length - 1];
         Object serviceBean = serviceMap.get(className);
 
         if (serviceBean!=null){
+            logger.info("request对象: " + JSON.toJSONString(request));
             Class<?> serviceClass = serviceBean.getClass();
             String methodName = request.getMethodName();
             Class<?>[] parameterTypes = request.getParameterTypes();
             Object[] parameters = request.getParameters();
-
             Method method = serviceClass.getMethod(methodName, parameterTypes);
             method.setAccessible(true);
             return method.invoke(serviceBean, getParameters(parameterTypes,parameters));
