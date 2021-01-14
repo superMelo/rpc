@@ -41,6 +41,6 @@ public class ZookeeperServiceRegistry {
 
     private void createNode(CuratorFramework curator, String data) throws Exception {
         curator.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL_SEQUENTIAL)
-                .forPath(ZK_REGISTRY_PATH + "/provider",data.getBytes(Charset.defaultCharset()));
+                .forPath(ZK_REGISTRY_PATH + "/provider", data.getBytes(Charset.defaultCharset()));
     }
 }

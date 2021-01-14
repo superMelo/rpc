@@ -1,4 +1,4 @@
-package com.qyf.rpc.remoting.netty.invoke;
+package com.qyf.rpc.proxy;
 
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
@@ -11,11 +11,11 @@ import org.springframework.core.type.classreading.MetadataReaderFactory;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Set;
 
+//扫描指定路径扫描注解接口,生成代理类
 public class ClassPathRpcScanner extends ClassPathBeanDefinitionScanner {
 
     private RpcFactoryBean<?> rpcFactoryBean = new RpcFactoryBean<>();
@@ -52,26 +52,10 @@ public class ClassPathRpcScanner extends ClassPathBeanDefinitionScanner {
         }
 
         if (acceptAllInterfaces) {
-            addIncludeFilter(new TypeFilter() {
-                @Override
-                public boolean match(MetadataReader metadataReader,
-                                     MetadataReaderFactory metadataReaderFactory) {
-                    return true;
-                }
-            });
+            addIncludeFilter(((metadataReader, metadataReaderFactory) -> {
+                return true;
+            }));
         }
-
-        // exclude package-info.java
-//        addExcludeFilter(new TypeFilter() {
-//            @Override
-//            public boolean match(MetadataReader metadataReader,
-//                                 MetadataReaderFactory metadataReaderFactory)
-//                    throws IOException {
-//                String className = metadataReader.getClassMetadata()
-//                        .getClassName();
-//                return className.endsWith("package-info");
-//            }
-//        });
         addExcludeFilter((metadataReader, metadataReaderFactory)->{
             String className = metadataReader.getClassMetadata()
                     .getClassName();

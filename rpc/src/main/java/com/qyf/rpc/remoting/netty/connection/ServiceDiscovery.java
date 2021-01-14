@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-//@Component
 //服务发现
 public class ServiceDiscovery {
 
@@ -51,6 +50,7 @@ public class ServiceDiscovery {
             getNodeData(client.getChildren().forPath(ZK_REGISTRY_PATH), client);
             updateConnectedServer();
         });
+        cache.start();
         getNodeData(nodes, client);
         logger.info("已发现服务列表...{}", JSONObject.toJSONString(addressList));
         updateConnectedServer();

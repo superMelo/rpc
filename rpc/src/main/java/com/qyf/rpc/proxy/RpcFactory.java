@@ -1,4 +1,4 @@
-package com.qyf.rpc.remoting.netty.invoke;
+package com.qyf.rpc.proxy;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Map;
 
-//@Component
+//代理工厂
 public class RpcFactory<T> implements InvocationHandler {
 
     @Autowired

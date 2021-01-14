@@ -1,10 +1,11 @@
-package com.qyf.rpc.remoting.netty.invoke;
+package com.qyf.rpc.proxy;
 
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.Proxy;
 
+//代理工厂对象
 public class RpcFactoryBean<T> implements FactoryBean<T> {
 
     private Class<T> rpcInterface;
@@ -31,6 +32,6 @@ public class RpcFactoryBean<T> implements FactoryBean<T> {
     }
 
     public <T> T getRpc() {
-        return (T) Proxy.newProxyInstance(rpcInterface.getClassLoader(), new Class[] { rpcInterface },factory);
+        return (T) Proxy.newProxyInstance(rpcInterface.getClassLoader(), new Class[]{rpcInterface}, factory);
     }
 }
