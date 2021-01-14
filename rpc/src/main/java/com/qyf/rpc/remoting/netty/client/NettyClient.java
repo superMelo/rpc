@@ -5,7 +5,7 @@ import com.qyf.rpc.entity.Request;
 import com.qyf.rpc.entity.Response;
 import com.qyf.rpc.remoting.netty.codec.JSONDecoder;
 import com.qyf.rpc.remoting.netty.codec.JSONEncoder;
-import com.qyf.rpc.remoting.netty.connection.ConnectManage;
+import com.qyf.rpc.monitor.ConnectManage;
 import com.qyf.rpc.remoting.netty.handle.NettyClientHandle;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -17,7 +17,6 @@ import io.netty.handler.timeout.IdleStateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PreDestroy;
 import java.net.SocketAddress;

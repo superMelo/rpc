@@ -14,4 +14,7 @@ import java.lang.annotation.*;
  * 开启rpc服务端
  */
 public @interface EnableRpcServer {
+
+    String type() default "netty";
+
 }

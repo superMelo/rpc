@@ -1,0 +1,10 @@
+
+server:
+  port: 8002
+
+registry:
+  address: 127.0.0.1:2181
+
+rpc:
+  server:
+    address: 127.0.0.1:7002

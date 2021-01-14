@@ -15,4 +15,6 @@ import java.lang.annotation.*;
  */
 public @interface EnableRpcClient {
     String value();
+
+    String type() default "netty";
 }
