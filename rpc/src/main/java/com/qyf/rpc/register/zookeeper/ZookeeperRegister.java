@@ -1,5 +1,6 @@
 package com.qyf.rpc.register.zookeeper;
 
+import com.qyf.rpc.register.Register;
 import com.qyf.rpc.utils.StringUtil;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.zookeeper.CreateMode;
@@ -10,25 +11,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.nio.charset.Charset;
 
-public class ZookeeperServiceRegistry {
-    Logger log = LoggerFactory.getLogger(this.getClass());
+public class ZookeeperRegister implements Register{
+
 
     @Autowired
     private CuratorFramework curator;
 
+
+    Logger log = LoggerFactory.getLogger(this.getClass());
+
+
+
     //zk服务注册目录
     private static final String ZK_REGISTRY_PATH = "/rpc";
-    public void register(String data) throws Exception{
-        if (StringUtil.isNotEmpty(data)){
+
+
+
+    @Override
+    //注册
+    public void doRegister(String url) throws Exception{
+        if (StringUtil.isNotEmpty(url)){
             if (curator != null){
                 //添加服务根节点
                 addRootNode(curator);
                 //添加服务节点
-                createNode(curator, data);
+                createNode(curator, url);
             }
         }
     }
-
 
 
     private void addRootNode(CuratorFramework curator) throws Exception {

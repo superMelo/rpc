@@ -1,9 +1,8 @@
-package com.qyf.rpc.register.zookeeper;
+package com.qyf.rpc.register;
 
 import com.qyf.rpc.annotion.EnableRpcClient;
 import com.qyf.rpc.config.ChooseConfig;
 import com.qyf.rpc.config.Config;
-import com.qyf.rpc.config.netty.ClientConfig;
 import com.qyf.rpc.proxy.ClassPathRpcScanner;
 import org.springframework.beans.factory.support.*;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -27,7 +26,8 @@ public class RpcClientRegistrar implements ImportBeanDefinitionRegistrar{
             //加载所有配置
             ChooseConfig chooseConfig = new ChooseConfig();
             Config config = chooseConfig.getConfig(type, TYPE);
-            config.register(registry);
+            config.register(registry, TYPE);
+
             //生成代理类
             ClassPathRpcScanner scanner = new ClassPathRpcScanner(registry);
             scanner.setAnnotationClass(null);

@@ -3,6 +3,7 @@ package com.qyf.rpc.remoting.netty.handle;
 import com.alibaba.fastjson.JSON;
 import com.qyf.rpc.entity.Request;
 import com.qyf.rpc.entity.Response;
+import com.qyf.rpc.remoting.netty.NettyProtocol;
 import com.qyf.rpc.remoting.netty.client.NettyClient;
 import com.qyf.rpc.monitor.ConnectManage;
 import io.netty.channel.Channel;
@@ -21,9 +22,6 @@ import java.util.concurrent.SynchronousQueue;
 
 @ChannelHandler.Sharable
 public class NettyClientHandle extends ChannelInboundHandlerAdapter {
-
-    @Autowired
-    NettyClient client;
 
     @Autowired
     ConnectManage connectManage;

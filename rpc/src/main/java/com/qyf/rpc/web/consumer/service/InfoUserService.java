@@ -22,4 +22,7 @@ public interface InfoUserService {
     String getNameById(String id);
 
     Map<String,InfoUser> getAllUser();
+
+    Map<String, Object> insertUser(Map<String, Object> map);
+
 }

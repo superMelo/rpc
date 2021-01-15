@@ -1,5 +1,7 @@
 package com.qyf.rpc.monitor;
 
+import com.qyf.rpc.remoting.Protocol;
+import com.qyf.rpc.remoting.netty.NettyProtocol;
 import com.qyf.rpc.remoting.netty.client.NettyClient;
 import io.netty.channel.Channel;
 import org.slf4j.Logger;
@@ -20,7 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ConnectManage {
 
     @Autowired
-    NettyClient nettyClient;
+    Protocol protocol;
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
     private AtomicInteger roundRobin = new AtomicInteger(0);
@@ -85,9 +87,9 @@ public class ConnectManage {
 
     private void connectServerNode(SocketAddress address){
         try {
-            Channel channel = nettyClient.doConnect(address);
+            Channel channel = protocol.doConnect(address);
             addChannel(channel,address);
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             logger.info("未能成功连接到服务器:{}",address);
         }

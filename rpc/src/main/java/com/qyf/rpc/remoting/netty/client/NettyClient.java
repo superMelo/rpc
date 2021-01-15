@@ -59,7 +59,6 @@ public class NettyClient {
         boss.shutdownGracefully();
     }
 
-
     public Object send(Request request) throws InterruptedException {
         Channel channel = manage.chooseChannel();
         if (channel != null && channel.isActive()){

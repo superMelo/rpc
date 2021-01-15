@@ -1,8 +1,7 @@
 package com.qyf.rpc.config;
 
 
-import com.qyf.rpc.config.netty.ClientConfig;
-import com.qyf.rpc.config.netty.ServerConfig;
+import com.qyf.rpc.config.netty.NettyConfig;
 
 public class ChooseConfig {
 
@@ -12,11 +11,7 @@ public class ChooseConfig {
         Config config = null;
         switch (type){
             case "netty":
-                if (t>0){
-                    config = new ServerConfig();
-                }else {
-                    config = new ClientConfig();
-                }
+                config = new NettyConfig();
                 break;
         }
         return config;

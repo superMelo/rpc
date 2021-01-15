@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -88,5 +89,16 @@ public class IndexController {
         long end = System.currentTimeMillis();
         logger.info("线程数：{},执行时间:{}",thread_count,(end-start));
         return allUser;
+    }
+
+    @RequestMapping("insertUser")
+    @ResponseBody
+    public Map<String, Object> insertUser(String id){
+        logger.info("根据ID查询用户信息:{}",id);
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", "t1");
+        map.put("name", "test");
+        map.put("address", "123");
+        return userService.insertUser(map);
     }
 }

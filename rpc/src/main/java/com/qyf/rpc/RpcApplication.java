@@ -5,8 +5,8 @@ import com.qyf.rpc.annotion.EnableRpcServer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-//@EnableRpcServer
-@EnableRpcClient(value = "com.qyf.rpc.web.consumer.service")
+@EnableRpcServer
+//@EnableRpcClient(value = "com.qyf.rpc.web.consumer.service")
 @SpringBootApplication
 public class RpcApplication {
 

@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.qyf.rpc.entity.Request;
 import com.qyf.rpc.entity.Response;
-import com.qyf.rpc.remoting.netty.client.NettyClient;
+import com.qyf.rpc.remoting.Protocol;
 import com.qyf.rpc.utils.IdUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ import java.util.Map;
 public class RpcFactory<T> implements InvocationHandler {
 
     @Autowired
-    NettyClient client;
+    Protocol protocol;
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -32,7 +32,7 @@ public class RpcFactory<T> implements InvocationHandler {
         request.setParameterTypes(method.getParameterTypes());
         request.setId(IdUtil.getId());
 
-        Object result = client.send(request);
+        Object result = protocol.send(request);
         Class<?> returnType = method.getReturnType();
 
         Response response = JSON.parseObject(result.toString(), Response.class);

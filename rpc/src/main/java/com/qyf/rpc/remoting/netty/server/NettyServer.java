@@ -1,7 +1,9 @@
 package com.qyf.rpc.remoting.netty.server;
 
 import com.qyf.rpc.annotion.RpcService;
-import com.qyf.rpc.register.zookeeper.ZookeeperServiceRegistry;
+import com.qyf.rpc.register.Register;
+import com.qyf.rpc.register.zookeeper.ZookeeperRegister;
+import com.qyf.rpc.remoting.netty.NettyServerProtocol;
 import com.qyf.rpc.remoting.netty.codec.JSONDecoder;
 import com.qyf.rpc.remoting.netty.codec.JSONEncoder;
 import com.qyf.rpc.remoting.netty.handle.NettyServerHandle;
@@ -24,45 +26,21 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NettyServer implements ApplicationContextAware,InitializingBean {
+public class NettyServer extends NettyServerProtocol implements InitializingBean {
 
     private static final Logger logger = LoggerFactory.getLogger(NettyServer.class);
     private static final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
     private static final EventLoopGroup workerGroup = new NioEventLoopGroup(4);
 
-    private Map<String, Object> serviceMap = new HashMap<>();
-
-    private Map<String, Method> methodMap = new HashMap<>();
+//    private Map<String, Object> serviceMap = new HashMap<>();
+//
+//    private Map<String, Method> methodMap = new HashMap<>();
 
     @Value("${rpc.server.address}")
     private String serverAddress;
 
     @Autowired
-    ZookeeperServiceRegistry zookeeperServiceRegistry;
-
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-
-        Map<String, Object> beans = applicationContext.getBeansWithAnnotation(RpcService.class);
-        for(Object serviceBean:beans.values()){
-
-            Class<?> clazz = serviceBean.getClass();
-
-            Class<?>[] interfaces = clazz.getInterfaces();
-
-            for (Class<?> inter : interfaces){
-                String interfaceName = inter.getName();
-                String[] split = interfaceName.split("\\.");
-                interfaceName = split[split.length - 1];
-                logger.info("加载服务类: {}", interfaceName);
-                Method[] methods = inter.getMethods();
-                for (Method method : methods) {
-                    methodMap.put(method.getName(), method);
-                }
-                serviceMap.put(interfaceName, serviceBean);
-            }
-        }
-        logger.info("已加载全部服务接口:{}", serviceMap);
-    }
+    private Register register;
 
     public void afterPropertiesSet() throws Exception {
         start();
@@ -70,7 +48,7 @@ public class NettyServer implements ApplicationContextAware,InitializingBean {
 
     public void start(){
 
-        final NettyServerHandle handler = new NettyServerHandle(serviceMap);
+        final NettyServerHandle handler = new NettyServerHandle(this.serviceMap);
 
         new Thread(() -> {
             try {
@@ -96,7 +74,7 @@ public class NettyServer implements ApplicationContextAware,InitializingBean {
                 int port = Integer.parseInt(array[1]);
                 ChannelFuture cf = bootstrap.bind(host,port).sync();
                 logger.info("RPC 服务器启动.监听端口:"+port);
-                zookeeperServiceRegistry.register(serverAddress);
+                register.doRegister(serverAddress);
                 //等待服务端监听端口关闭
                 cf.channel().closeFuture().sync();
             } catch (Exception e) {

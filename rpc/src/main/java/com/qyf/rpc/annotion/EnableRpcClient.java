@@ -1,6 +1,6 @@
 package com.qyf.rpc.annotion;
 
-import com.qyf.rpc.register.zookeeper.RpcClientRegistrar;
+import com.qyf.rpc.register.RpcClientRegistrar;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
