@@ -1,11 +1,11 @@
 package com.qyf.rpc.remoting.netty.handle;
 
 import com.alibaba.fastjson.JSON;
+import com.qyf.rpc.connection.AbstractManage;
+import com.qyf.rpc.connection.Manage;
 import com.qyf.rpc.entity.Request;
 import com.qyf.rpc.entity.Response;
-import com.qyf.rpc.remoting.netty.NettyProtocol;
-import com.qyf.rpc.remoting.netty.client.NettyClient;
-import com.qyf.rpc.monitor.ConnectManage;
+import com.qyf.rpc.connection.netty.NettyManage;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -24,22 +24,26 @@ import java.util.concurrent.SynchronousQueue;
 public class NettyClientHandle extends ChannelInboundHandlerAdapter {
 
     @Autowired
-    ConnectManage connectManage;
+    AbstractManage manage;
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private ConcurrentHashMap<String,SynchronousQueue<Object>> queueMap = new ConcurrentHashMap<>();
 
-    public void channelActive(ChannelHandlerContext ctx)   {
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
         logger.info("已连接到RPC服务器.{}",ctx.channel().remoteAddress());
     }
 
+
+    @Override
     public void channelInactive(ChannelHandlerContext ctx)   {
         InetSocketAddress address =(InetSocketAddress) ctx.channel().remoteAddress();
         logger.info("与RPC服务器断开连接."+address);
         ctx.channel().close();
-        connectManage.removeChannel(ctx.channel());
+        manage.removeChannel(ctx.channel());
     }
+    @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg)throws Exception {
         Response response = JSON.parseObject(msg.toString(),Response.class);
         String requestId = response.getRequestId();
@@ -56,6 +60,7 @@ public class NettyClientHandle extends ChannelInboundHandlerAdapter {
     }
 
 
+    @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt)throws Exception {
         logger.info("已超过30秒未与RPC服务器进行读写操作!将发送心跳消息...");
         if (evt instanceof IdleStateEvent){
@@ -70,6 +75,7 @@ public class NettyClientHandle extends ChannelInboundHandlerAdapter {
         }
     }
 
+    @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause){
         logger.info("RPC通信服务器发生异常.{}",cause);
         ctx.channel().close();

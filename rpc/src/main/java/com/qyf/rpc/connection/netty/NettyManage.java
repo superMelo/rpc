@@ -1,44 +1,28 @@
-package com.qyf.rpc.monitor;
+package com.qyf.rpc.connection.netty;
 
+import com.qyf.rpc.connection.AbstractManage;
 import com.qyf.rpc.remoting.Protocol;
-import com.qyf.rpc.remoting.netty.NettyProtocol;
-import com.qyf.rpc.remoting.netty.client.NettyClient;
 import io.netty.channel.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
 
-//连接管理
-public class ConnectManage {
+public class NettyManage extends AbstractManage {
 
     @Autowired
     Protocol protocol;
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
-    private AtomicInteger roundRobin = new AtomicInteger(0);
-    private CopyOnWriteArrayList<Channel> channels = new CopyOnWriteArrayList<>();
-    private Map<SocketAddress, Channel> channelNodes = new ConcurrentHashMap<>();
 
-    public Channel chooseChannel() {
-        if (channels.size()>0) {
-            int size = channels.size();
-            int index = (roundRobin.getAndAdd(1) + size) % size;
-            return channels.get(index);
-        }else{
-            return null;
-        }
-    }
 
+
+
+    @Override
     public synchronized void updateConnectServer(List<String> addressList){
         if (addressList.size()==0 || addressList==null){
             logger.error("没有可用的服务器节点, 全部服务节点已关闭!");
@@ -100,10 +84,5 @@ public class ConnectManage {
         channelNodes.put(address, channel);
     }
 
-    public void removeChannel(Channel channel){
-        logger.info("从连接管理器中移除失效Channel.{}",channel.remoteAddress());
-        SocketAddress remotePeer = channel.remoteAddress();
-        channelNodes.remove(remotePeer);
-        channels.remove(channel);
-    }
+
 }

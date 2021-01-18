@@ -1,11 +1,13 @@
 package com.qyf.rpc.remoting.netty.client;
 
 import com.alibaba.fastjson.JSONArray;
+import com.qyf.rpc.connection.AbstractManage;
+import com.qyf.rpc.connection.Manage;
 import com.qyf.rpc.entity.Request;
 import com.qyf.rpc.entity.Response;
 import com.qyf.rpc.remoting.netty.codec.JSONDecoder;
 import com.qyf.rpc.remoting.netty.codec.JSONEncoder;
-import com.qyf.rpc.monitor.ConnectManage;
+import com.qyf.rpc.connection.netty.NettyManage;
 import com.qyf.rpc.remoting.netty.handle.NettyClientHandle;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -34,7 +36,7 @@ public class NettyClient {
     private NettyClientHandle handle;
 
     @Autowired
-    private ConnectManage manage;
+    private AbstractManage manage;
 
     public NettyClient() {
         bootstrap.group(boss)

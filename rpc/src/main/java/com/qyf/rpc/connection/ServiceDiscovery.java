@@ -1,4 +1,4 @@
-package com.qyf.rpc.monitor;
+package com.qyf.rpc.connection;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.curator.framework.CuratorFramework;
@@ -19,7 +19,7 @@ public class ServiceDiscovery {
     private String registryAddress;
 
     @Autowired
-    ConnectManage connectManage;
+    Manage manage;
 
     // 服务地址列表
     private volatile List<String> addressList = new ArrayList<>();
@@ -53,7 +53,7 @@ public class ServiceDiscovery {
         updateConnectedServer();
     }
     private void updateConnectedServer(){
-        connectManage.updateConnectServer(addressList);
+        manage.updateConnectServer(addressList);
     }
 
     private void getNodeData(List<String> nodes, CuratorFramework client) throws Exception {

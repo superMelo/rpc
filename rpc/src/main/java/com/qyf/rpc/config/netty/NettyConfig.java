@@ -1,43 +1,36 @@
 package com.qyf.rpc.config.netty;
 
 import com.qyf.rpc.config.AbstractConfig;
-import com.qyf.rpc.monitor.ConnectManage;
-import com.qyf.rpc.monitor.ServiceDiscovery;
-import com.qyf.rpc.proxy.RpcFactory;
+import com.qyf.rpc.connection.http.HttpManage;
+import com.qyf.rpc.connection.netty.NettyManage;
 import com.qyf.rpc.register.zookeeper.ZookeeperRegister;
+import com.qyf.rpc.remoting.http.server.HttpServer;
 import com.qyf.rpc.remoting.netty.NettyProtocol;
 import com.qyf.rpc.remoting.netty.client.NettyClient;
 import com.qyf.rpc.remoting.netty.handle.NettyClientHandle;
 import com.qyf.rpc.remoting.netty.server.NettyServer;
 
-import java.util.Map;
-
 public class NettyConfig extends AbstractConfig{
 
 
     @Override
-    public Map<String, Class> loadClientConfig() {
+    public void loadClientConfig() {
         //加载netty客户端
-        map.put("protocol", NettyProtocol.class);
+        loadMap.put("protocol", NettyProtocol.class);
         //加载netty客户端
-        map.put("nettyClient", NettyClient.class);
-        //加载服务发现
-        map.put("serviceDiscovery", ServiceDiscovery.class);
-        //加载连接管理
-        map.put("connectManage", ConnectManage.class);
+        loadMap.put("nettyClient", NettyClient.class);
         //加载handle
-        map.put("nettyClientHandle", NettyClientHandle.class);
-        //加载rpcFactory
-        map.put("rpcFactory", RpcFactory.class);
-        return map;
+        loadMap.put("nettyClientHandle", NettyClientHandle.class);
+        //加载连接管理
+        loadMap.put("manage", NettyManage.class);
     }
 
     @Override
-    public Map<String, Class> loadServerConfig() {
+    public void loadServerConfig() {
         //加载注册
-        map.put("register", ZookeeperRegister.class);
+        loadMap.put("register", ZookeeperRegister.class);
         //加载netty服务端
-        map.put("nettyServer", NettyServer.class);
-        return map;
+        loadMap.put("nettyServer", NettyServer.class);
+        loadMap.put("httpServer", HttpServer.class);
     }
 }

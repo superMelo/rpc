@@ -6,9 +6,9 @@ import java.util.Map;
 
 public interface Config {
 
-     Map<String, Class> loadClientConfig();
+     void loadClientConfig();
 
-     Map<String, Class> loadServerConfig();
+     void loadServerConfig();
 
      void register(BeanDefinitionRegistry registry, int type);
 }
