@@ -1,13 +1,11 @@
 package com.qyf.rpc.remoting.netty.client;
 
 import com.alibaba.fastjson.JSONArray;
-import com.qyf.rpc.connection.AbstractManage;
-import com.qyf.rpc.connection.Manage;
+import com.qyf.rpc.connection.AbstractConnectManage;
 import com.qyf.rpc.entity.Request;
 import com.qyf.rpc.entity.Response;
 import com.qyf.rpc.remoting.netty.codec.JSONDecoder;
 import com.qyf.rpc.remoting.netty.codec.JSONEncoder;
-import com.qyf.rpc.connection.netty.NettyManage;
 import com.qyf.rpc.remoting.netty.handle.NettyClientHandle;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -36,7 +34,7 @@ public class NettyClient {
     private NettyClientHandle handle;
 
     @Autowired
-    private AbstractManage manage;
+    private AbstractConnectManage manage;
 
     public NettyClient() {
         bootstrap.group(boss)
@@ -62,7 +60,7 @@ public class NettyClient {
     }
 
     public Object send(Request request) throws InterruptedException {
-        Channel channel = manage.chooseChannel();
+        Channel channel = (Channel) manage.select();
         if (channel != null && channel.isActive()){
             SynchronousQueue<Object> queue = handle.sendRequest(request, channel);
             Object result = queue.take();

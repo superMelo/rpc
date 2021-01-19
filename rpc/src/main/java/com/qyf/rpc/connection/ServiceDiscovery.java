@@ -15,11 +15,9 @@ import java.util.List;
 //服务发现
 public class ServiceDiscovery {
 
-    @Value("${registry.address}")
-    private String registryAddress;
 
     @Autowired
-    Manage manage;
+    ConnectManage connectManage;
 
     // 服务地址列表
     private volatile List<String> addressList = new ArrayList<>();
@@ -53,7 +51,7 @@ public class ServiceDiscovery {
         updateConnectedServer();
     }
     private void updateConnectedServer(){
-        manage.updateConnectServer(addressList);
+        connectManage.updateConnectServer(addressList);
     }
 
     private void getNodeData(List<String> nodes, CuratorFramework client) throws Exception {

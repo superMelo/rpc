@@ -3,6 +3,8 @@ package com.qyf.rpc.register;
 import com.qyf.rpc.annotion.EnableRpcClient;
 import com.qyf.rpc.config.ChooseConfig;
 import com.qyf.rpc.config.Config;
+import com.qyf.rpc.eunm.RemotingType;
+import com.qyf.rpc.eunm.Type;
 import com.qyf.rpc.proxy.ClassPathRpcScanner;
 import org.springframework.beans.factory.support.*;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -22,11 +24,11 @@ public class RpcClientRegistrar implements ImportBeanDefinitionRegistrar{
         AnnotationAttributes annoAttrs = AnnotationAttributes.fromMap(importingClassMetadata.getAnnotationAttributes(EnableRpcClient.class.getName()));
         if (annoAttrs != null){
             String basePackage = (String)annoAttrs.get("value");
-            String type = (String) annoAttrs.get("type");
+            RemotingType type = (RemotingType) annoAttrs.get("type");
             //加载所有配置
             ChooseConfig chooseConfig = new ChooseConfig();
-            Config config = chooseConfig.getConfig(type, TYPE);
-            config.register(registry, TYPE);
+            Config config = chooseConfig.getConfig(type);
+            config.register(registry, Type.Client);
 
             //生成代理类
             ClassPathRpcScanner scanner = new ClassPathRpcScanner(registry);

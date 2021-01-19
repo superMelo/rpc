@@ -3,6 +3,8 @@ package com.qyf.rpc.register;
 import com.qyf.rpc.annotion.EnableRpcServer;
 import com.qyf.rpc.config.ChooseConfig;
 import com.qyf.rpc.config.Config;
+import com.qyf.rpc.eunm.RemotingType;
+import com.qyf.rpc.eunm.Type;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.annotation.AnnotationAttributes;
@@ -16,11 +18,11 @@ public class RpcServerRegistrar implements ImportBeanDefinitionRegistrar {
         //通过zookeeper注册服务,建立netty服务端
         AnnotationAttributes annoAttrs = AnnotationAttributes.fromMap(annotationMetadata.getAnnotationAttributes(EnableRpcServer.class.getName()));
         if (annoAttrs != null){
-            String type = (String)annoAttrs.get("type");
+            RemotingType remotingType = (RemotingType)annoAttrs.get("type");
             //加载所有配置
             ChooseConfig chooseConfig = new ChooseConfig();
-            Config config = chooseConfig.getConfig(type, TYPE);
-            config.register(registry, TYPE);
+            Config config = chooseConfig.getConfig(remotingType);
+            config.register(registry, Type.Server);
         }
     }
 

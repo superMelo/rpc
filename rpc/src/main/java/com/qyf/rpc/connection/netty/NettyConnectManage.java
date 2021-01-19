@@ -1,6 +1,6 @@
 package com.qyf.rpc.connection.netty;
 
-import com.qyf.rpc.connection.AbstractManage;
+import com.qyf.rpc.connection.AbstractConnectManage;
 import com.qyf.rpc.remoting.Protocol;
 import io.netty.channel.Channel;
 import org.slf4j.Logger;
@@ -12,14 +12,26 @@ import java.net.SocketAddress;
 import java.util.HashSet;
 import java.util.List;
 
-public class NettyManage extends AbstractManage {
+public class NettyConnectManage extends AbstractConnectManage {
+
+
+
 
     @Autowired
     Protocol protocol;
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
+    @Override
+    public Channel select() {
+        if (channels.size()>0) {
+            int size = channels.size();
+            int index = (roundRobin.getAndAdd(1) + size) % size;
+            return channels.get(index);
+        }else{
+            return null;
+        }
+    }
 
 
     @Override
@@ -84,5 +96,12 @@ public class NettyManage extends AbstractManage {
         channelNodes.put(address, channel);
     }
 
-
+    @Override
+    public void remove(Object obj) {
+        Channel channel = (Channel) obj;
+        logger.info("从连接管理器中移除失效Channel.{}",channel.remoteAddress());
+        SocketAddress remotePeer = channel.remoteAddress();
+        channelNodes.remove(remotePeer);
+        channels.remove(channel);
+    }
 }

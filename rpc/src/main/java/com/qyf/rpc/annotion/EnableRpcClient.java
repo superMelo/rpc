@@ -1,5 +1,6 @@
 package com.qyf.rpc.annotion;
 
+import com.qyf.rpc.eunm.RemotingType;
 import com.qyf.rpc.register.RpcClientRegistrar;
 import org.springframework.context.annotation.Import;
 
@@ -16,5 +17,5 @@ import java.lang.annotation.*;
 public @interface EnableRpcClient {
     String value();
 
-    String type() default "netty";
+    RemotingType type() default RemotingType.Netty;
 }

@@ -1,11 +1,9 @@
 package com.qyf.rpc.remoting.netty.handle;
 
 import com.alibaba.fastjson.JSON;
-import com.qyf.rpc.connection.AbstractManage;
-import com.qyf.rpc.connection.Manage;
+import com.qyf.rpc.connection.AbstractConnectManage;
 import com.qyf.rpc.entity.Request;
 import com.qyf.rpc.entity.Response;
-import com.qyf.rpc.connection.netty.NettyManage;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -24,7 +22,7 @@ import java.util.concurrent.SynchronousQueue;
 public class NettyClientHandle extends ChannelInboundHandlerAdapter {
 
     @Autowired
-    AbstractManage manage;
+    AbstractConnectManage manage;
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -41,7 +39,7 @@ public class NettyClientHandle extends ChannelInboundHandlerAdapter {
         InetSocketAddress address =(InetSocketAddress) ctx.channel().remoteAddress();
         logger.info("与RPC服务器断开连接."+address);
         ctx.channel().close();
-        manage.removeChannel(ctx.channel());
+        manage.remove(ctx.channel());
     }
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg)throws Exception {
