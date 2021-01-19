@@ -1,6 +1,7 @@
 package com.qyf.rpc.remoting.http.client;
 
 import com.alibaba.fastjson.JSON;
+import com.qyf.rpc.connection.ConnectManage;
 import com.qyf.rpc.connection.http.HttpConnectManage;
 import com.qyf.rpc.entity.Request;
 import org.apache.http.HttpEntity;
@@ -26,7 +27,7 @@ public class HttpClient{
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private HttpConnectManage connectManage;
+    private ConnectManage connectManage;
 
 
     private static CloseableHttpClient client = HttpClientBuilder.create().build();

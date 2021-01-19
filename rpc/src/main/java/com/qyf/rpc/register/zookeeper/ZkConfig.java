@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
-public class zkConfig {
+//@Configuration
+public class ZkConfig {
 
     @Value("${registry.address}")
     private String registry;

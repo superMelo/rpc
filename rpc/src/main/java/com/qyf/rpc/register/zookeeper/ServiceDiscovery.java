@@ -1,6 +1,7 @@
-package com.qyf.rpc.connection;
+package com.qyf.rpc.register.zookeeper;
 
 import com.alibaba.fastjson.JSONObject;
+import com.qyf.rpc.connection.ConnectManage;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.slf4j.Logger;

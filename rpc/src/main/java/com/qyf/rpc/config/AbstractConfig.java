@@ -1,9 +1,10 @@
 package com.qyf.rpc.config;
 
 import com.google.common.collect.Maps;
-import com.qyf.rpc.connection.ServiceDiscovery;
+import com.qyf.rpc.register.zookeeper.ServiceDiscovery;
 import com.qyf.rpc.eunm.Type;
 import com.qyf.rpc.proxy.RpcFactory;
+import com.qyf.rpc.register.zookeeper.ZkConfig;
 import com.qyf.rpc.register.zookeeper.ZookeeperRegister;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -31,6 +32,7 @@ public abstract class AbstractConfig implements Config {
             loadMap.put("register", ZookeeperRegister.class);
             loadServerConfig();
         }
+        loadMap.put("zkConfig", ZkConfig.class);
         loadMap.forEach((k, v) -> {
             BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(v);
             GenericBeanDefinition definition = (GenericBeanDefinition) builder.getRawBeanDefinition();

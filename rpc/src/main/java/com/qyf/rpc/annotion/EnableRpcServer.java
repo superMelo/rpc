@@ -1,7 +1,7 @@
 package com.qyf.rpc.annotion;
 
 import com.qyf.rpc.eunm.RemotingType;
-import com.qyf.rpc.register.RpcServerRegistrar;
+import com.qyf.rpc.register.api.RpcServerRegistrar;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;

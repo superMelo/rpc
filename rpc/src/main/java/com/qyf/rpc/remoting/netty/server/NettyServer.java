@@ -1,8 +1,6 @@
 package com.qyf.rpc.remoting.netty.server;
 
-import com.qyf.rpc.annotion.RpcService;
-import com.qyf.rpc.register.Register;
-import com.qyf.rpc.register.zookeeper.ZookeeperRegister;
+import com.qyf.rpc.register.api.Register;
 import com.qyf.rpc.remoting.netty.NettyServerProtocol;
 import com.qyf.rpc.remoting.netty.codec.JSONDecoder;
 import com.qyf.rpc.remoting.netty.codec.JSONEncoder;
@@ -15,16 +13,9 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
 public class NettyServer extends NettyServerProtocol implements InitializingBean {
 

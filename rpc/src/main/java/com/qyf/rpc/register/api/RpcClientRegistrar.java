@@ -1,4 +1,4 @@
-package com.qyf.rpc.register;
+package com.qyf.rpc.register.api;
 
 import com.qyf.rpc.annotion.EnableRpcClient;
 import com.qyf.rpc.config.ChooseConfig;
