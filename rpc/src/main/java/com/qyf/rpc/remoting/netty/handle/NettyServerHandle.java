@@ -75,16 +75,16 @@ public class NettyServerHandle extends ChannelInboundHandlerAdapter {
             logger.info("request对象: " + JSON.toJSONString(request));
             Class<?> serviceClass = serviceBean.getClass();
             String methodName = request.getMethodName();
-            Class<?>[] parameterTypes = request.getParameterTypes();
+//            Class<?>[] parameterTypes = request.getParameterTypes();
             Object[] parameters = request.getParameters();
-            Method method = serviceClass.getMethod(methodName, parameterTypes);
+//            Method method = serviceClass.getMethod(methodName, parameterTypes);
+            Method method = ClassUtils.getMethod(serviceClass, methodName);
             method.setAccessible(true);
-            return method.invoke(serviceBean, ClassUtils.getParameters(parameterTypes,parameters));
+            return method.invoke(serviceBean, ClassUtils.getParameters(method.getParameterTypes(), parameters));
         }else{
             throw new Exception("未找到服务接口,请检查配置!:"+className+"#"+request.getMethodName());
         }
     }
-
 
 
     @Override

@@ -2,6 +2,8 @@ package com.qyf.rpc.utils;
 
 import com.alibaba.fastjson.JSON;
 
+import java.lang.reflect.Method;
+
 public class ClassUtils {
 
     /**
@@ -21,4 +23,18 @@ public class ClassUtils {
             return new_parameters;
         }
     }
+
+    //根据clz和方法名获取method
+    public static Method getMethod(Class<?> serviceClass, String methodName){
+        Method[] methods = serviceClass.getMethods();
+        Method method = null;
+        for (Method m : methods) {
+            if (methodName.equals(m.getName())){
+                method = m;
+                break;
+            }
+        }
+        return method;
+    }
+
 }

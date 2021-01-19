@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 
-//@Controller
+@Controller
 public class IndexController {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -37,21 +37,24 @@ public class IndexController {
     @ResponseBody
     public List<InfoUser> getUserList() throws InterruptedException {
 
-        long start = System.currentTimeMillis();
-        int thread_count = 100;
-        CountDownLatch countDownLatch = new CountDownLatch(thread_count);
-        for (int i=0;i<thread_count;i++){
-            new Thread(() -> {
-                InfoUser infoUser = new InfoUser(IdUtil.getId(),"Jeen","BeiJing");
-                List<InfoUser> users = userService.insertInfoUser(infoUser);
-                logger.info("返回用户信息记录:{}", JSON.toJSONString(users));
-                countDownLatch.countDown();
-            }).start();
-        }
-        countDownLatch.await();
-        long end = System.currentTimeMillis();
-        logger.info("线程数：{},执行时间:{}",thread_count,(end-start));
-        return null;
+//        long start = System.currentTimeMillis();
+//        int thread_count = 100;
+//        CountDownLatch countDownLatch = new CountDownLatch(thread_count);
+//        for (int i=0;i<thread_count;i++){
+//            new Thread(() -> {
+//                InfoUser infoUser = new InfoUser(IdUtil.getId(),"Jeen","BeiJing");
+//                List<InfoUser> users = userService.insertInfoUser(infoUser);
+//                logger.info("返回用户信息记录:{}", JSON.toJSONString(users));
+//                countDownLatch.countDown();
+//            }).start();
+//        }
+//        countDownLatch.await();
+//        long end = System.currentTimeMillis();
+//        logger.info("线程数：{},执行时间:{}",thread_count,(end-start));
+        InfoUser infoUser = new InfoUser(IdUtil.getId(),"Jeen","BeiJing");
+        List<InfoUser> users = userService.insertInfoUser(infoUser);
+        logger.info("返回用户信息记录:{}", JSON.toJSONString(users));
+        return users;
     }
 
     @RequestMapping("getById")

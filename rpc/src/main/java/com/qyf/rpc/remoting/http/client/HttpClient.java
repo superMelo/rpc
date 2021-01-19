@@ -42,7 +42,8 @@ public class HttpClient{
                 .setParameter("className", classNames[classNames.length - 1])
                 .setParameter("methodName", request.getMethodName())
                 .setParameter("parameters", JSON.toJSONString(request.getParameters()))
-                .setParameter("parameterTypes", JSON.toJSONString(request.getParameterTypes())).build();
+//                .setParameter("parameterTypes", JSON.toJSONString(request.getParameterTypes()))
+                .build();
         HttpGet httpGet = new HttpGet(uri);
         log.info("http请求地址:{}", httpGet.getURI());
         // 配置信息

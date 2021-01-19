@@ -29,7 +29,7 @@ public class RpcFactory<T> implements InvocationHandler {
         request.setClassName(method.getDeclaringClass().getName());
         request.setMethodName(method.getName());
         request.setParameters(args);
-        request.setParameterTypes(method.getParameterTypes());
+//        request.setParameterTypes(method.getParameterTypes());
         request.setId(IdUtil.getId());
 
         Object result = protocol.send(request);

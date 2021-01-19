@@ -11,7 +11,8 @@ public class Request {
 
     private String methodName; //方法名
 
-    private Class<?>[] parameterTypes; //参数类型
+    //在服务方获取对应的方法参数类型
+//    private Class<?>[] parameterTypes; //参数类型
 
     private Object[] parameters; //参数列表
 
