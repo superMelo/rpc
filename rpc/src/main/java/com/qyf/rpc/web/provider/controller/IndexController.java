@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.UUID;
 
-@Controller
+//@Controller
 public class IndexController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());

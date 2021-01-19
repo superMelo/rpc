@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.qyf.rpc.entity.Request;
 import com.qyf.rpc.entity.Response;
-import com.qyf.rpc.remoting.Protocol;
+import com.qyf.rpc.remoting.api.Protocol;
 import com.qyf.rpc.utils.IdUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -3,8 +3,6 @@ package com.qyf.rpc.remoting.http.client;
 import com.alibaba.fastjson.JSON;
 import com.qyf.rpc.connection.http.HttpConnectManage;
 import com.qyf.rpc.entity.Request;
-import com.qyf.rpc.remoting.AbstractProtocol;
-import io.netty.channel.Channel;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -15,31 +13,23 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.net.SocketAddress;
 import java.net.URI;
-import java.util.List;
 
 /**
  * http客户端
  */
-public class HttpClient extends AbstractProtocol{
+public class HttpClient{
 
     @Autowired
     private HttpConnectManage connectManage;
 
-
-    @Override
-    public Channel doConnect(SocketAddress address) throws Exception {
-        return null;
-    }
 
     private CloseableHttpClient client = HttpClientBuilder.create().build();
 
 
 
     public Object send(Request request) throws Exception{
-        List<String> urls = (List<String>) connectManage.select();
-        String url = urls.get(0);
+        String url = (String) connectManage.select();
         String[] strs = url.split(":");
         String className = request.getClassName();
         String[] classNames = className.split("\\.");

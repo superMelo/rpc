@@ -1,9 +1,8 @@
 package com.qyf.rpc.remoting.netty;
 
 import com.qyf.rpc.entity.Request;
-import com.qyf.rpc.remoting.AbstractProtocol;
+import com.qyf.rpc.remoting.api.AbstractProtocol;
 import com.qyf.rpc.remoting.netty.client.NettyClient;
-import com.qyf.rpc.remoting.netty.server.NettyServer;
 import io.netty.channel.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,9 @@ public class NettyProtocol extends AbstractProtocol{
 
     @Override
     public Object send(Request request) throws Exception {
+        log.info("netty发送请求:{}", request);
         Object obj = client.send(request);
+        log.info("netty请求响应:{}", obj);
         return obj;
     }
 

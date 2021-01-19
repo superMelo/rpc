@@ -16,7 +16,6 @@ import org.springframework.util.StringUtils;
 public class RpcClientRegistrar implements ImportBeanDefinitionRegistrar{
 
 
-    private static final int TYPE = 0;
 
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {

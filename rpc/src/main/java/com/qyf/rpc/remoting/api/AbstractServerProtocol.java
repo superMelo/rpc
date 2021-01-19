@@ -1,4 +1,4 @@
-package com.qyf.rpc.remoting;
+package com.qyf.rpc.remoting.api;
 
 import com.qyf.rpc.annotion.RpcService;
 import com.qyf.rpc.remoting.netty.NettyServerProtocol;

@@ -1,4 +1,4 @@
-package com.qyf.rpc.remoting;
+package com.qyf.rpc.remoting.api;
 
 import com.qyf.rpc.entity.Request;
 import io.netty.channel.Channel;

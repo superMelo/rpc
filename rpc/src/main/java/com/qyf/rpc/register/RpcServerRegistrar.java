@@ -12,7 +12,6 @@ import org.springframework.core.type.AnnotationMetadata;
 
 public class RpcServerRegistrar implements ImportBeanDefinitionRegistrar {
 
-    private static final int TYPE = 1;
     @Override
     public void registerBeanDefinitions(AnnotationMetadata annotationMetadata, BeanDefinitionRegistry registry) {
         //通过zookeeper注册服务,建立netty服务端

@@ -3,7 +3,9 @@ package com.qyf.rpc.remoting.http.server;
 import com.alibaba.fastjson.JSON;
 import com.qyf.rpc.entity.Response;
 import com.qyf.rpc.register.Register;
-import com.qyf.rpc.remoting.AbstractServerProtocol;
+import com.qyf.rpc.remoting.api.AbstractServerProtocol;
+import com.qyf.rpc.remoting.http.codec.HttpDecoder;
+import com.qyf.rpc.remoting.http.codec.HttpEncoder;
 import com.qyf.rpc.utils.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,10 +16,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -44,7 +43,9 @@ public class HttpServer extends AbstractServerProtocol implements HandlerInterce
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        Map<String, Object> map = decode(request);
+        HttpDecoder httpDecoder = new HttpDecoder();
+        HttpEncoder httpEncoder = new HttpEncoder();
+        Map<String, Object> map = (Map<String, Object>) httpDecoder.decode(request, serviceMap);
         if (map != null){
             Method method = (Method) map.get("method");
             Object[] objects  = (Object[])map.get("parameter");
@@ -57,7 +58,7 @@ public class HttpServer extends AbstractServerProtocol implements HandlerInterce
                 resp.setCode(200);
                 resp.setRequestId("1");
                 resp.setData(o);
-                responseResult(response, resp);
+                httpEncoder.encode(response, resp);
             }
             return false;
         }else{
@@ -66,54 +67,6 @@ public class HttpServer extends AbstractServerProtocol implements HandlerInterce
     }
 
 
-    private Map<String, Object> decode(HttpServletRequest request) throws ClassNotFoundException {
-        String className = request.getParameter("className");
-        String methodName = request.getParameter("methodName");
-        String parameters = request.getParameter("parameters");
-        Object[] objects = JSON.parseObject(parameters, Object[].class);
-        Object serviceBean = serviceMap.get(className);
-        if (serviceBean != null){
-            Class<?> clz = serviceBean.getClass();
-            Method[] methods = clz.getMethods();
-            Method method = null;
-            for (Method m : methods) {
-                if (methodName.equals(m.getName())){
-                    method = m;
-                    break;
-                }
-            }
-            HashMap<String, Object> map = new HashMap<>();
-            map.put("className", className);
-            map.put("methodName", methodName);
-            map.put("method", method);
-            map.put("parameter", objects);
-            map.put("serviceBean", serviceBean);
-            return map;
-        }
-        return null;
-    }
 
-    private void responseResult(HttpServletResponse response, Response resp) {
-        response.setCharacterEncoding("UTF-8");
-        response.setHeader("Content-Type", "application/json");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Access-Control-Allow-Methods", "GET, POST");
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Max-Age", "3600");
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/json;charset=UTF-8");
-        PrintWriter writer=null;
-        try {
-            writer=response.getWriter();
-            writer.write(JSON.toJSONString(resp));
-            writer.flush();
-        } catch (IOException ex) {
-            logger.error(ex.getMessage());
-        }finally {
-            if(writer!=null) {
-                writer.close();
-            }
-        }
-    }
 
 }

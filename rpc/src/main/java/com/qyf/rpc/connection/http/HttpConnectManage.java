@@ -10,6 +10,7 @@ public class HttpConnectManage extends AbstractConnectManage {
     Logger logger = LoggerFactory.getLogger(this.getClass());
     @Override
     public void updateConnectServer(List<String> addressList) {
+        urls.clear();
         addressList.stream().forEach(a->{
             urls.add(a);
         });

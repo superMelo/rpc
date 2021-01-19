@@ -1,7 +1,7 @@
 package com.qyf.rpc.connection.netty;
 
 import com.qyf.rpc.connection.AbstractConnectManage;
-import com.qyf.rpc.remoting.Protocol;
+import com.qyf.rpc.remoting.api.Protocol;
 import io.netty.channel.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

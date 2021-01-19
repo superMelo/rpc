@@ -14,7 +14,7 @@ public class NettyConfig extends AbstractConfig{
 
     @Override
     public void loadClientConfig() {
-        //加载netty客户端
+        //加载netty协议
         loadMap.put("protocol", NettyProtocol.class);
         //加载netty客户端
         loadMap.put("nettyClient", NettyClient.class);

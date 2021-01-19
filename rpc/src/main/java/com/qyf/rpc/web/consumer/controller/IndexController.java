@@ -18,10 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-/**
- * Created by MACHENIKE on 2018-12-03.
- */
-//@Controller
+
+@Controller
 public class IndexController {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
