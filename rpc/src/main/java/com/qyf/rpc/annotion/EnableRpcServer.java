@@ -15,8 +15,6 @@ import java.lang.annotation.*;
  * 开启rpc服务端
  */
 public @interface EnableRpcServer {
-    //指向entity的路径
-    String value() default "";
 
     RemotingType type() default RemotingType.Netty;
 
