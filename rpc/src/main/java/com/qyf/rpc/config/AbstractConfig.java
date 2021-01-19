@@ -1,7 +1,7 @@
 package com.qyf.rpc.config;
 
 import com.google.common.collect.Maps;
-import com.qyf.rpc.register.zookeeper.ServiceDiscovery;
+import com.qyf.rpc.discovery.zookeeper.ZkServiceDiscovery;
 import com.qyf.rpc.eunm.Type;
 import com.qyf.rpc.proxy.RpcFactory;
 import com.qyf.rpc.register.zookeeper.ZkConfig;
@@ -21,22 +21,30 @@ public abstract class AbstractConfig implements Config {
     }
 
     private void doRegister(BeanDefinitionRegistry registry, Type type){
-        if (type == Type.Client){
-            //加载rpcFactory
-            loadMap.put("rpcFactory", RpcFactory.class);
-            //加载服务发现
-            loadMap.put("serviceDiscovery", ServiceDiscovery.class);
-            loadClientConfig();
-        }else {
-            //加载注册
-            loadMap.put("register", ZookeeperRegister.class);
-            loadServerConfig();
-        }
+        choose(type);
         loadMap.put("zkConfig", ZkConfig.class);
         loadMap.forEach((k, v) -> {
             BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(v);
             GenericBeanDefinition definition = (GenericBeanDefinition) builder.getRawBeanDefinition();
             registry.registerBeanDefinition(k, definition);
         });
+    }
+
+    private void choose(Type type){
+        if (type == Type.Client){
+            //加载rpcFactory
+            loadMap.put("rpcFactory", RpcFactory.class);
+            chooseServiceDiscovery();
+            loadClientConfig();
+        }else {
+            //加载注册
+            loadMap.put("register", ZookeeperRegister.class);
+            loadServerConfig();
+        }
+    }
+
+    private void chooseServiceDiscovery(){
+        //加载服务发现
+        loadMap.put("discovery", ZkServiceDiscovery.class);
     }
 }

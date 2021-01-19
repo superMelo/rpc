@@ -1,7 +1,8 @@
-package com.qyf.rpc.register.zookeeper;
+package com.qyf.rpc.discovery.zookeeper;
 
 import com.alibaba.fastjson.JSONObject;
 import com.qyf.rpc.connection.ConnectManage;
+import com.qyf.rpc.discovery.AbstractDiscovery;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.slf4j.Logger;
@@ -14,14 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 //服务发现
-public class ServiceDiscovery {
+public class ZkServiceDiscovery extends AbstractDiscovery {
 
 
     @Autowired
     ConnectManage connectManage;
 
-    // 服务地址列表
-    private volatile List<String> addressList = new ArrayList<>();
     private static final String ZK_REGISTRY_PATH = "/rpc";
 
     @Autowired
@@ -29,36 +28,39 @@ public class ServiceDiscovery {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @PostConstruct
-    public void init() throws Exception{
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
         if (curator != null) {
-            watchNode(curator);
+            watchNode();
         }
     }
 
-
-    private void watchNode(final CuratorFramework client) throws Exception {
-        PathChildrenCache cache = new PathChildrenCache(client, ZK_REGISTRY_PATH, true);
-        List<String> nodes = client.getChildren().forPath(ZK_REGISTRY_PATH);
-        cache.getListenable().addListener((curatorFramework, event)->{
+    @Override
+    public void watchNode() throws Exception {
+        PathChildrenCache cache = new PathChildrenCache(curator, ZK_REGISTRY_PATH, true);
+        List<String> nodes = curator.getChildren().forPath(ZK_REGISTRY_PATH);
+        cache.getListenable().addListener((curatorFramework, event) -> {
             logger.info("监听到子节点数据变化{}", JSONObject.toJSONString(event.getInitialData()));
             addressList.clear();
-            getNodeData(client.getChildren().forPath(ZK_REGISTRY_PATH), client);
+            getNodeData(curator.getChildren().forPath(ZK_REGISTRY_PATH));
             updateConnectedServer();
         });
         cache.start();
-        getNodeData(nodes, client);
+        getNodeData(nodes);
         logger.info("已发现服务列表...{}", JSONObject.toJSONString(addressList));
         updateConnectedServer();
     }
-    private void updateConnectedServer(){
+
+    @Override
+    public void updateConnectedServer() throws Exception {
         connectManage.updateConnectServer(addressList);
     }
 
-    private void getNodeData(List<String> nodes, CuratorFramework client) throws Exception {
+    private void getNodeData(List<String> nodes) throws Exception {
         logger.info("/rpc子节点数据为:{}", JSONObject.toJSONString(nodes));
         for(String node:nodes){
-            String address = new String(client.getData().forPath(ZK_REGISTRY_PATH + "/" + node));
+            String address = new String(curator.getData().forPath(ZK_REGISTRY_PATH + "/" + node));
             addressList.add(address);
         }
     }
