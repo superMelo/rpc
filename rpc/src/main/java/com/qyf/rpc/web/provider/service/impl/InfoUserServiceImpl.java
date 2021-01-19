@@ -60,12 +60,12 @@ public class InfoUserServiceImpl implements InfoUserService {
     }
 
     @Override
-    public Map<String, Object> insertUser(Map<String, Object> map) {
+    public String insertUser(Map<String, Object> map) {
         InfoUser infoUser = new InfoUser();
         infoUser.setId((String) map.get("id"));
         infoUser.setName((String) map.get("name"));
         infoUser.setAddress((String) map.get("address"));
         infoUserMap.put((String)map.get("id"),infoUser);
-        return map;
+        return "success";
     }
 }

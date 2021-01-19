@@ -16,7 +16,7 @@ public class ClassUtils {
         }else{
             Object[] new_parameters = new Object[parameters.length];
             for(int i=0;i<parameters.length;i++){
-                new_parameters[i] = JSON.parseObject(parameters[i].toString(),parameterTypes[i]);
+                new_parameters[i] = JSON.parseObject(JSON.toJSONString(parameters[i]),parameterTypes[i]);
             }
             return new_parameters;
         }

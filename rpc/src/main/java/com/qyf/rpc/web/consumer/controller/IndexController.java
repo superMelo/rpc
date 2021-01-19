@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 
-@Controller
+//@Controller
 public class IndexController {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());

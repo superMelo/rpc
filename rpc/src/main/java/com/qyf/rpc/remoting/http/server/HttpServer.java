@@ -37,6 +37,7 @@ public class HttpServer extends AbstractServerProtocol implements HandlerInterce
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        logger.info("服务地址:{}", url);
         //注册服务
         register.doRegister(url);
     }
@@ -50,13 +51,14 @@ public class HttpServer extends AbstractServerProtocol implements HandlerInterce
             Method method = (Method) map.get("method");
             Object[] objects  = (Object[])map.get("parameter");
             Object serviceBean = map.get("serviceBean");
+            String id = (String)map.get("id");
             if (serviceBean != null){
-                Object o = method.invoke(serviceBean, ClassUtils.getParameters( method.getParameterTypes(), objects));
+                Object o = method.invoke(serviceBean, ClassUtils.getParameters(method.getParameterTypes(), objects));
                 method.setAccessible(true);
                 response.setCharacterEncoding("UTF-8");
                 Response resp = new Response();
                 resp.setCode(200);
-                resp.setRequestId("1");
+                resp.setRequestId(id);
                 resp.setData(o);
                 httpEncoder.encode(response, resp);
             }
