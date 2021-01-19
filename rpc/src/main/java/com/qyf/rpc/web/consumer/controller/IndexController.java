@@ -91,8 +91,7 @@ public class IndexController {
 
     @RequestMapping("insertUser")
     @ResponseBody
-    public Map<String, Object> insertUser(String id){
-        logger.info("根据ID查询用户信息:{}",id);
+    public String insertUser(){
         Map<String, Object> map = new HashMap<>();
         map.put("id", "t1");
         map.put("name", "test");

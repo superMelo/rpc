@@ -11,6 +11,8 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URI;
@@ -20,27 +22,29 @@ import java.net.URI;
  */
 public class HttpClient{
 
+
+    private Logger log = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private HttpConnectManage connectManage;
 
 
-    private CloseableHttpClient client = HttpClientBuilder.create().build();
+    private static CloseableHttpClient client = HttpClientBuilder.create().build();
 
 
-
-    public Object send(Request request) throws Exception{
+    private HttpGet get(Request request) throws Exception{
         String url = (String) connectManage.select();
-        String[] strs = url.split(":");
+        String[] strings = url.split(":");
         String className = request.getClassName();
         String[] classNames = className.split("\\.");
         URI uri = new URIBuilder().setScheme("http")
-                .setHost(strs[0]).setPort(Integer.parseInt(strs[1])).setPath(request.getMethodName())
+                .setHost(strings[0]).setPort(Integer.parseInt(strings[1])).setPath(request.getMethodName())
                 .setParameter("className", classNames[classNames.length - 1])
                 .setParameter("methodName", request.getMethodName())
                 .setParameter("parameters", JSON.toJSONString(request.getParameters()))
                 .setParameter("parameterTypes", JSON.toJSONString(request.getParameterTypes())).build();
         HttpGet httpGet = new HttpGet(uri);
-        System.out.println("===============" + httpGet.getURI());
+        log.info("http请求地址:{}", httpGet.getURI());
         // 配置信息
         RequestConfig requestConfig = RequestConfig.custom()
                 // 设置连接超时时间(单位毫秒)
@@ -52,36 +56,16 @@ public class HttpClient{
                 // 设置是否允许重定向(默认为true)
                 .setRedirectsEnabled(true).build();
         httpGet.setConfig(requestConfig);
+        return httpGet;
+    }
 
+    public Object send(Request request) throws Exception{
+        HttpGet httpGet = get(request);
         CloseableHttpResponse response = client.execute(httpGet);
         HttpEntity responseEntity = response.getEntity();
         String resp = EntityUtils.toString(responseEntity);
+        log.info("http响应:{}", resp);
         return resp;
     }
 
-//    public static void main(String[] args) throws Exception {
-//        HttpClient httpClient = new HttpClient();
-//        Class<?> clz = Class.forName("com.qyf.rpc.web.consumer.service.InfoUserService");
-//        Method[] methods = clz.getMethods();
-//        Request request = new Request();
-//        for (Method method : methods) {
-//            String name = method.getName();
-//            if ("insertUser".equals(name)){
-//                request.setId("1111");
-//                request.setMethodName(name);
-//                request.setClassName("InfoUserService");
-//                request.setParameterTypes(method.getParameterTypes());
-//                Map<String, Object> map = new HashMap<>();
-//                map.put("id", "t1");
-//                map.put("name", "test");
-//                map.put("address", "123");
-//                Object[] objects = new Object[1];
-//                objects[0] = map;
-//                request.setParameters(objects);
-//                break;
-//            }
-//        }
-//        Object send = httpClient.send(request);
-//        System.out.println(send);
-//    }
 }
