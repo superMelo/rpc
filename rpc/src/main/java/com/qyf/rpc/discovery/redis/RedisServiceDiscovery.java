@@ -80,7 +80,8 @@ public class RedisServiceDiscovery extends AbstractDiscovery{
     private void addListener(){
         new Thread(()->{
             RedisPubSub listener = new RedisPubSub();
-            jedis.subscribe(listener, REDIS_REGISTER);
+            Jedis pubClient = new Jedis("127.0.0.1", 6379);
+            pubClient.subscribe(listener, REDIS_REGISTER);
         }).start();
     }
 
