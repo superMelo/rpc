@@ -1,6 +1,8 @@
 package com.qyf.rpc.config;
 
 import com.google.common.collect.Maps;
+import com.qyf.rpc.discovery.redis.RedisServiceDiscovery;
+import com.qyf.rpc.discovery.redis.Subscribe;
 import com.qyf.rpc.discovery.zookeeper.ZkServiceDiscovery;
 import com.qyf.rpc.eunm.Type;
 import com.qyf.rpc.proxy.RpcFactory;
@@ -45,6 +47,8 @@ public abstract class AbstractConfig implements Config {
 
     private void chooseServiceDiscovery(){
         //加载服务发现
-        loadMap.put("discovery", ZkServiceDiscovery.class);
+//        loadMap.put("discovery", ZkServiceDiscovery.class);
+        loadMap.put("discovery", RedisServiceDiscovery.class);
+        loadMap.put("subscribe", Subscribe.class);
     }
 }

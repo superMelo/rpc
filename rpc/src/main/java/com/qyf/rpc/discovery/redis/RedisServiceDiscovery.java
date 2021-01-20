@@ -13,6 +13,8 @@ public class RedisServiceDiscovery extends AbstractDiscovery{
 
     @Override
     public void watchNode() throws Exception {
+        //从redis获取所有服务的地址
+        subscribe.register();
         subscribe.listener();
         subscribe.heartbeat();
     }

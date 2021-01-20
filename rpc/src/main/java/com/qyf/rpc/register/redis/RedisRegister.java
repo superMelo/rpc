@@ -43,7 +43,7 @@ public class RedisRegister extends AbstractRegister{
         List<String> list = Lists.newLinkedList();
         list.add(url);
         client.set(REGISTRY_PATH_KEY, JSON.toJSONString(list));
-        subscribe.register(url);
+        subscribe.register();
     }
 
 
