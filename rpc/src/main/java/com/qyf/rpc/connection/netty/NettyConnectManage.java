@@ -27,7 +27,7 @@ public class NettyConnectManage extends AbstractConnectManage {
         if (channels.size()>0) {
             int size = channels.size();
             int index = (roundRobin.getAndAdd(1) + size) % size;
-            return channels.get(index);
+            return (Channel) channels.get(index);
         }else{
             return null;
         }
@@ -38,8 +38,9 @@ public class NettyConnectManage extends AbstractConnectManage {
     public synchronized void updateConnectServer(List<String> addressList){
         if (addressList.size()==0 || addressList==null){
             logger.error("没有可用的服务器节点, 全部服务节点已关闭!");
-            for (final Channel channel : channels) {
-                SocketAddress remotePeer = channel.remoteAddress();
+            for (final Object channel : channels) {
+                Channel c = (Channel) channel;
+                SocketAddress remotePeer = c.remoteAddress();
                 Channel handler_node = channelNodes.get(remotePeer);
                 handler_node.close();
             }
@@ -67,7 +68,7 @@ public class NettyConnectManage extends AbstractConnectManage {
             }
         }
         for (int i = 0; i < channels.size(); ++i) {
-            Channel channel = channels.get(i);
+            Channel channel = (Channel) channels.get(i);
             SocketAddress remotePeer = channel.remoteAddress();
             if (!newAllServerNodeSet.contains(remotePeer)) {
                 logger.info("删除失效服务节点 " + remotePeer);
@@ -90,8 +91,12 @@ public class NettyConnectManage extends AbstractConnectManage {
             logger.info("未能成功连接到服务器:{}",address);
         }
     }
-    private void addChannel(Channel channel, SocketAddress address) {
-        logger.info("加入Channel到连接管理器.{}",address);
+
+    @Override
+    public void addChannel(Object... obj) {
+        Channel channel = (Channel) obj[0];
+        SocketAddress address = (SocketAddress) obj[1];
+        logger.info("加入Channel到连接管理器.{}", address);
         channels.add(channel);
         channelNodes.put(address, channel);
     }

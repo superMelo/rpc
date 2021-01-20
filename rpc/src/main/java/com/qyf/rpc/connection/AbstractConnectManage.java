@@ -16,11 +16,11 @@ public abstract class AbstractConnectManage implements ConnectManage {
 
     //netty
     protected AtomicInteger roundRobin = new AtomicInteger(0);
-    protected CopyOnWriteArrayList<Channel> channels = new CopyOnWriteArrayList<>();
+    protected CopyOnWriteArrayList<Object> channels = new CopyOnWriteArrayList<>();
     protected Map<SocketAddress, Channel> channelNodes = new ConcurrentHashMap<>();
 
     //http
-    protected  CopyOnWriteArrayList<String> urls = new CopyOnWriteArrayList<>();
+//    protected  CopyOnWriteArrayList<String> urls = new CopyOnWriteArrayList<>();
 
 
 

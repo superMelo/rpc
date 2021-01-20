@@ -2,6 +2,7 @@ package com.qyf.rpc.register.redis;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
+import com.qyf.rpc.discovery.redis.Publish;
 import com.qyf.rpc.discovery.redis.RedisPubSub;
 import com.qyf.rpc.discovery.redis.Subscribe;
 import com.qyf.rpc.register.api.AbstractRegister;
@@ -21,6 +22,8 @@ public class RedisRegister extends AbstractRegister{
 
     @Autowired
     private Subscribe subscribe;
+    @Autowired
+    private Publish publish;
 
 
     private static final String REGISTRY_PATH_KEY = "registry_path_key";
@@ -44,6 +47,7 @@ public class RedisRegister extends AbstractRegister{
         list.add(url);
         client.set(REGISTRY_PATH_KEY, JSON.toJSONString(list));
         subscribe.register();
+        publish.publish(url);
     }
 
 

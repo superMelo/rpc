@@ -7,26 +7,34 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 public class HttpConnectManage extends AbstractConnectManage {
-    Logger logger = LoggerFactory.getLogger(this.getClass());
+    private Logger log = LoggerFactory.getLogger(this.getClass());
     @Override
     public void updateConnectServer(List<String> addressList) {
-        urls.clear();
-        addressList.stream().forEach(a-> urls.add(a));
+        channels.clear();
+
+        addressList.stream().forEach(a-> channels.add(a));
+
+
     }
 
     @Override
     public Object select() {
-        if (urls.size()>0) {
-            int size = urls.size();
+        if (channels.size()>0) {
+            int size = channels.size();
             int index = (roundRobin.getAndAdd(1) + size) % size;
-            return urls.get(index);
+            return channels.get(index);
         }else{
             return null;
         }
     }
 
     @Override
+    public void addChannel(Object... obj) {
+
+    }
+
+    @Override
     public void remove(Object obj) {
-        
+
     }
 }

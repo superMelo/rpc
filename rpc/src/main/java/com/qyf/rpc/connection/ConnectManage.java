@@ -8,4 +8,6 @@ public interface ConnectManage {
     Object select();
 
     void remove(Object obj);
+
+    void addChannel(Object... obj);
 }
