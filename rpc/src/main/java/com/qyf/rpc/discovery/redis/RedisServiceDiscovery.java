@@ -6,12 +6,15 @@ import redis.clients.jedis.Jedis;
 
 public class RedisServiceDiscovery extends AbstractDiscovery{
 
+
     @Autowired
-    private Jedis jedis;
+    private Subscribe subscribe;
+
 
     @Override
     public void watchNode() throws Exception {
-
+        subscribe.listener();
+        subscribe.heartbeat();
     }
 
     @Override
@@ -21,6 +24,7 @@ public class RedisServiceDiscovery extends AbstractDiscovery{
 
     @Override
     public void afterPropertiesSet() throws Exception {
-
+        watchNode();
     }
+
 }
