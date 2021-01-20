@@ -32,8 +32,6 @@ public class RedisServiceDiscovery extends AbstractDiscovery{
     public void watchNode() throws Exception {
         //从redis加载所有服务的地址
         getNodeData();
-        //监听地址
-        addListener();
         //心跳监测
         Map<String, AtomicInteger> serviceMap = RedisPubSub.serviceMap;
         ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
@@ -55,6 +53,8 @@ public class RedisServiceDiscovery extends AbstractDiscovery{
                 }
             });
         }, 1, 5, TimeUnit.SECONDS);
+        //监听地址
+        addListener();
     }
 
     @Override
@@ -67,6 +67,8 @@ public class RedisServiceDiscovery extends AbstractDiscovery{
         String str = jedis.get(REGISTRY_PATH_KEY);
         List<String> list = JSON.parseObject(str, List.class);
         list.remove(node);
+        addressList.clear();
+        addressList.addAll(list);
     }
 
     @Override
@@ -78,11 +80,9 @@ public class RedisServiceDiscovery extends AbstractDiscovery{
 
     //监听地址
     private void addListener(){
-        new Thread(()->{
             RedisPubSub listener = new RedisPubSub();
             Jedis pubClient = new Jedis("127.0.0.1", 6379);
             pubClient.subscribe(listener, REDIS_REGISTER);
-        }).start();
     }
 
     //加载服务列表

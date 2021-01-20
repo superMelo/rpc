@@ -11,10 +11,7 @@ public class HttpConnectManage extends AbstractConnectManage {
     @Override
     public void updateConnectServer(List<String> addressList) {
         channels.clear();
-
         addressList.stream().forEach(a-> channels.add(a));
-
-
     }
 
     @Override
