@@ -12,15 +12,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class AbstractConnectManage implements ConnectManage {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    //netty
     protected AtomicInteger roundRobin = new AtomicInteger(0);
     protected CopyOnWriteArrayList<Object> channels = new CopyOnWriteArrayList<>();
     protected Map<SocketAddress, Channel> channelNodes = new ConcurrentHashMap<>();
-
-    //http
-//    protected  CopyOnWriteArrayList<String> urls = new CopyOnWriteArrayList<>();
 
 
 

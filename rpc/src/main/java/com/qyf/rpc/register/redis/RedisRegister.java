@@ -21,9 +21,8 @@ public class RedisRegister extends AbstractRegister{
     private Jedis client;
 
     @Autowired
-    private Subscribe subscribe;
-    @Autowired
     private Publish publish;
+
 
 
     private static final String REGISTRY_PATH_KEY = "registry_path_key";
@@ -36,17 +35,17 @@ public class RedisRegister extends AbstractRegister{
     }
 
 
-    @Override
-    public void createRootNode(){
-
-    }
 
     @Override
     public void createNode(String url) {
         List<String> list = Lists.newLinkedList();
         list.add(url);
+        //注册服务地址
+        Map<String, AtomicInteger> serviceMap = RedisPubSub.serviceMap;
+        serviceMap.put(url, new AtomicInteger(0));
+        //保存服务地址到redis
         client.set(REGISTRY_PATH_KEY, JSON.toJSONString(list));
-        subscribe.register();
+        //发送消息，保持心跳
         publish.publish(url);
     }
 

@@ -30,8 +30,8 @@ public class RedisServiceDiscovery extends AbstractDiscovery{
 
     @Override
     public void watchNode() throws Exception {
+        //从redis加载所有服务的地址
         getNodeData();
-        //从redis获取所有服务的地址
         //监听地址
         addListener();
         //心跳监测
@@ -42,8 +42,14 @@ public class RedisServiceDiscovery extends AbstractDiscovery{
             serviceMap.forEach((k, v)->{
                 if (v.intValue() == 0){
                     log.info(k + ":连接断开");
-                    //去除redis里的服务地址
-                    deleteNode(k);
+                    try {
+                        //去除redis里的服务地址
+                        deleteNode(k);
+                        //更新服务本地列表
+                        updateConnectedServer();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }else {
                     v.set(0);
                 }
@@ -78,10 +84,11 @@ public class RedisServiceDiscovery extends AbstractDiscovery{
         }).start();
     }
 
-    //注册所有服务地址
+    //加载服务列表
     private void getNodeData(){
         String str = jedis.get(REGISTRY_PATH_KEY);
         List<String> list = JSON.parseObject(str, List.class);
+        //保存到服务本地列表
         addressList.addAll(list);
         Map<String, AtomicInteger> serviceMap = RedisPubSub.serviceMap;
         list.stream().forEach(s -> serviceMap.put(s, new AtomicInteger(0)));
