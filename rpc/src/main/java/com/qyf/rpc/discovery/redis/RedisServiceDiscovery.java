@@ -53,6 +53,7 @@ public class RedisServiceDiscovery extends AbstractDiscovery{
                 }
             });
         }, 1, 5, TimeUnit.SECONDS);
+        updateConnectedServer();
         //监听地址
         addListener();
     }
@@ -81,9 +82,11 @@ public class RedisServiceDiscovery extends AbstractDiscovery{
 
     //监听地址
     private void addListener(){
+        new Thread(()->{
             RedisPubSub listener = new RedisPubSub();
             Jedis pubClient = new Jedis("127.0.0.1", 6379);
             pubClient.subscribe(listener, REDIS_REGISTER);
+        }).start();
     }
 
     //加载服务列表
