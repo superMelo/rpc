@@ -17,7 +17,7 @@ public class RedisPubSub extends JedisPubSub{
     //订阅
     @Override
     public void onSubscribe(String channel, int subscribedChannels) {
-       log.info("订阅的channel:{}", channel + subscribedChannels);
+       log.info("订阅的channel:{}", channel +":"+ subscribedChannels);
     }
 
     @Override
