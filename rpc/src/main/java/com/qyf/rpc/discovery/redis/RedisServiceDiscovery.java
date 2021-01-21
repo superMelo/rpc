@@ -28,7 +28,6 @@ public class RedisServiceDiscovery extends AbstractDiscovery{
     @Autowired
     private ConnectManage connectManage;
 
-    private static final String REGISTRY_PATH_KEY = "registry_path_key";
 
     @Override
     public void watchNode() throws Exception {

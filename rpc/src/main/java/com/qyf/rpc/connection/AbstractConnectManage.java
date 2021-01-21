@@ -24,8 +24,8 @@ public abstract class AbstractConnectManage implements ConnectManage {
 
     @Override
     public Object select(Request request) {
-        String serverName = request.getServerName();
-        List<String> list = addressList.get(serverName);
+        String className = request.getClassName();
+        List<String> list = addressList.get(className);
         if (list.size()>0) {
             int size = list.size();
             int index = (roundRobin.getAndAdd(1) + size) % size;

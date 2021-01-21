@@ -29,14 +29,14 @@ public class RedisRegister extends AbstractRegister{
 
 
     @Override
-    public void doRegister(String url, String serverName) throws Exception {
-        if (StringUtil.isNotEmpty(url, serverName)){
-            createNode(url, serverName);
+    public void doRegister(String url, String className) throws Exception {
+        if (StringUtil.isNotEmpty(url, className)){
+            createNode(url, className);
         }
     }
 
     @Override
-    public void createNode(String url, String serverName) throws Exception {
+    public void createNode(String url, String className) throws Exception {
         String val = client.get(REGISTRY_PATH_KEY);
         Map<String, Set<String>> map;
         Set<String> urls;
@@ -46,12 +46,12 @@ public class RedisRegister extends AbstractRegister{
             if (urls != null){
                 urls.add(url);
             }
-            map.put(serverName, urls);
+            map.put(className, urls);
         }else {
             map = Maps.newHashMap();
             urls = Sets.newHashSet();
             urls.add(url);
-            map.put(serverName, urls);
+            map.put(className, urls);
         }
         //注册服务地址
         Map<String, AtomicInteger> serviceMap = RedisPubSub.serviceMap;
@@ -59,7 +59,7 @@ public class RedisRegister extends AbstractRegister{
         //保存服务地址到redis
         client.set(REGISTRY_PATH_KEY, JSON.toJSONString(map));
         //发送消息，保持心跳
-        url = serverName + ":" + url;
+        url = className + ":" + url;
         publish.publish(url);
     }
 

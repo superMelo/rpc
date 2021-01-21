@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationContextAware;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AbstractServerProtocol implements ServerProtocol, ApplicationContextAware {
@@ -17,6 +18,7 @@ public class AbstractServerProtocol implements ServerProtocol, ApplicationContex
     private static final Logger log = LoggerFactory.getLogger(NettyServerProtocol.class);
 
     protected static Map<String, Object> serviceMap = new HashMap<>();
+
 
     protected static Map<String, Method> methodMap = new HashMap<>();
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -30,8 +32,8 @@ public class AbstractServerProtocol implements ServerProtocol, ApplicationContex
 
             for (Class<?> inter : interfaces){
                 String interfaceName = inter.getName();
-                String[] split = interfaceName.split("\\.");
-                interfaceName = split[split.length - 1];
+//                String[] split = interfaceName.split("\\.");
+//                interfaceName = split[split.length - 1];
                 log.info("加载服务类: {}", interfaceName);
                 Method[] methods = inter.getMethods();
                 for (Method method : methods) {
