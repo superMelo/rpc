@@ -60,8 +60,8 @@ public abstract class AbstractConfig implements Config {
                     loadMap.put("discovery", RedisServiceDiscovery.class);
                 }else {
                     loadMap.put("publish", Publish.class);
+                    loadMap.put("register", RedisRegister.class);
                 }
-                loadMap.put("register", RedisRegister.class);
                 break;
         }
     }
