@@ -38,7 +38,7 @@ public class RedisServiceDiscovery extends AbstractDiscovery{
         Map<String, AtomicInteger> serviceMap = RedisPubSub.serviceMap;
         ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
         service.scheduleWithFixedDelay(()->{
-            log.info("5秒一次心跳监测");
+            log.info("每5秒一次进行心跳监测");
             serviceMap.forEach((k, v)->{
                 if (v.intValue() == 0){
                     log.info(k + ":连接断开");
