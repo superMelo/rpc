@@ -34,25 +34,13 @@ public class RedisRegister extends AbstractRegister{
 
     @Override
     public void createNode(String url, String className) throws Exception {
-        String val = client.get(REGISTRY_PATH_KEY);
-        Map<String, CopyOnWriteArrayList<String>> map;
-        CopyOnWriteArrayList<String> urls;
-        if (StringUtil.isNotEmpty(val)){
-            map = JSON.parseObject(val, Map.class);
-            urls = map.get(url) != null ?  map.get(url): new CopyOnWriteArrayList();
-            urls.add(url);
-            map.put(className, urls);
-        }else {
-            map = Maps.newHashMap();
-            urls = new CopyOnWriteArrayList();
-            urls.add(url);
-            map.put(className, urls);
-        }
+        //从redis获取服务列表
+        String service = client.get(REGISTRY_PATH_KEY);
+        createService(service, url, className);
         //注册服务地址
-        Map<String, AtomicInteger> serviceMap = RedisPubSub.serviceMap;
-        serviceMap.put(url, new AtomicInteger(1));
+        RedisPubSub.serviceMap.put(url, new AtomicInteger(1));
         //保存服务地址到redis
-        client.set(REGISTRY_PATH_KEY, JSON.toJSONString(map));
+        client.set(REGISTRY_PATH_KEY, JSON.toJSONString(serviceMap));
         //发送消息，保持心跳
         url = className + "-" + url;
         publish.publish(url);
