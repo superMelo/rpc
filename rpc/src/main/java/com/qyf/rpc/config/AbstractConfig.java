@@ -46,7 +46,7 @@ public abstract class AbstractConfig implements Config {
                 break;
             case Server:
                 //加载注册
-                loadMap.put("register", RedisRegister.class);
+                chooseServiceDiscovery(registerType, type);
                 loadServerConfig();
                 break;
         }
@@ -64,6 +64,7 @@ public abstract class AbstractConfig implements Config {
                 }else {
                     loadMap.put("publish", Publish.class);
                 }
+                loadMap.put("register", RedisRegister.class);
                 break;
         }
     }

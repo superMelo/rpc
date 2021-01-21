@@ -25,7 +25,5 @@ public class HttpConfig extends AbstractConfig{
         loadMap.put("webConfig", WebConfig.class);
         //加载http服务端
         loadMap.put("httpServer", HttpServer.class);
-        //加载服务注册
-        loadMap.put("register", ZookeeperRegister.class);
     }
 }
