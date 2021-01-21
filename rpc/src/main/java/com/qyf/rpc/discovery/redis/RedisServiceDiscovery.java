@@ -1,6 +1,8 @@
 package com.qyf.rpc.discovery.redis;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.google.common.collect.Lists;
 import com.qyf.rpc.connection.ConnectManage;
 import com.qyf.rpc.discovery.AbstractDiscovery;
 import org.slf4j.Logger;
@@ -8,9 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -65,21 +65,6 @@ public class RedisServiceDiscovery extends AbstractDiscovery{
     }
 
 
-    private void deleteNode(String node){
-        String[] strs = node.split(":");
-        String jsonStr = jedis.get(REGISTRY_PATH_KEY);
-        Map<String, CopyOnWriteArrayList<String>> serviceMap = JSON.parseObject(jsonStr, Map.class);
-        CopyOnWriteArrayList<String> sets = serviceMap.get(strs[0]);
-        synchronized (sets){
-            if (sets != null){
-                sets.remove(strs[1]);
-                serviceMap.put(strs[0], sets);
-                jedis.set(REGISTRY_PATH_KEY, JSON.toJSONString(serviceMap));
-                addressList.clear();
-                addressList = serviceMap;
-            }
-        }
-    }
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -101,12 +86,38 @@ public class RedisServiceDiscovery extends AbstractDiscovery{
     private void getNodeData(){
         //获取redis的服务名称和地址
         String str = jedis.get(REGISTRY_PATH_KEY);
-        Map<String, CopyOnWriteArrayList<String>> map = JSON.parseObject(str, Map.class);
+        Map<String, Object> map = JSON.parseObject(str, Map.class);
         //保存到服务本地列表
-        addressList = map;
+        map.forEach((k, v)->{
+            addressList.put(k, toCopyOnWriteArrayList(v));
+        });
         //给每个服务加上监听
         Map<String, AtomicInteger> serviceMap = RedisPubSub.serviceMap;
         addressList.forEach((k, v)-> v.stream().forEach(s -> serviceMap.put(k + ":" + s, new AtomicInteger(1))));
     }
+
+    private void deleteNode(String node){
+        String[] strs = node.split("-");
+        String jsonStr = jedis.get(REGISTRY_PATH_KEY);
+        Map<String, Object> serviceMap = JSON.parseObject(jsonStr, Map.class);
+        CopyOnWriteArrayList<String> sets = toCopyOnWriteArrayList(serviceMap.get(strs[0]));
+        synchronized (sets){
+            if (sets != null){
+                sets.remove(strs[1]);
+                serviceMap.put(strs[0], sets);
+                jedis.set(REGISTRY_PATH_KEY, JSON.toJSONString(serviceMap));
+                addressList.put(strs[0], sets);
+            }
+        }
+    }
+
+    private CopyOnWriteArrayList<String> toCopyOnWriteArrayList(Object obj){
+        CopyOnWriteArrayList<String> list = Lists.newCopyOnWriteArrayList();
+        for (Object o : (JSONArray)obj) {
+            list.add((String) o);
+        }
+        return list;
+    }
+
 
 }
