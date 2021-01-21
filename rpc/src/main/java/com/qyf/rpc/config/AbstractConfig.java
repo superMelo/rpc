@@ -2,16 +2,13 @@ package com.qyf.rpc.config;
 
 import com.google.common.collect.Maps;
 import com.qyf.rpc.discovery.redis.Publish;
-import com.qyf.rpc.discovery.redis.Subscribe;
 import com.qyf.rpc.discovery.redis.RedisServiceDiscovery;
-import com.qyf.rpc.discovery.redis.Subscribe;
 import com.qyf.rpc.discovery.zookeeper.ZkServiceDiscovery;
 import com.qyf.rpc.eunm.RegisterType;
 import com.qyf.rpc.eunm.Type;
 import com.qyf.rpc.proxy.RpcFactory;
 import com.qyf.rpc.register.redis.RedisRegister;
 import com.qyf.rpc.register.zookeeper.ZkConfig;
-import com.qyf.rpc.register.zookeeper.ZookeeperRegister;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
