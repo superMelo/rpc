@@ -1,9 +1,7 @@
 package com.qyf.rpc.register.redis;
 
 import com.alibaba.fastjson.JSON;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.qyf.rpc.discovery.redis.Publish;
 import com.qyf.rpc.discovery.redis.RedisPubSub;
 import com.qyf.rpc.register.api.AbstractRegister;
@@ -11,10 +9,9 @@ import com.qyf.rpc.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;
 
-import java.util.HashSet;
-import java.util.List;
+
 import java.util.Map;
-import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RedisRegister extends AbstractRegister{
@@ -38,18 +35,16 @@ public class RedisRegister extends AbstractRegister{
     @Override
     public void createNode(String url, String className) throws Exception {
         String val = client.get(REGISTRY_PATH_KEY);
-        Map<String, Set<String>> map;
-        Set<String> urls;
+        Map<String, CopyOnWriteArrayList<String>> map;
+        CopyOnWriteArrayList<String> urls;
         if (StringUtil.isNotEmpty(val)){
             map = JSON.parseObject(val, Map.class);
-            urls = map.get(url);
-            if (urls != null){
-                urls.add(url);
-            }
+            urls = map.get(url) != null ?  map.get(url): new CopyOnWriteArrayList();
+            urls.add(url);
             map.put(className, urls);
         }else {
             map = Maps.newHashMap();
-            urls = Sets.newHashSet();
+            urls = new CopyOnWriteArrayList();
             urls.add(url);
             map.put(className, urls);
         }
