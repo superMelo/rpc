@@ -21,7 +21,7 @@ public class Publish {
     public void publish(String url){
         ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
         service.scheduleWithFixedDelay(() ->{
-            log.info("发送心跳消息维持连接:{}", url);
+            log.info("发送心跳维持连接:{}", url);
             jedis.publish(REDIS_REGISTER, url);
         }, 1, 3, TimeUnit.SECONDS);
     }
