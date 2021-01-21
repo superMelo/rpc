@@ -3,6 +3,7 @@ package com.qyf.rpc.register.api;
 import com.qyf.rpc.annotion.EnableRpcServer;
 import com.qyf.rpc.config.ChooseConfig;
 import com.qyf.rpc.config.Config;
+import com.qyf.rpc.eunm.RegisterType;
 import com.qyf.rpc.eunm.RemotingType;
 import com.qyf.rpc.eunm.Type;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -18,10 +19,11 @@ public class RpcServerRegistrar implements ImportBeanDefinitionRegistrar {
         AnnotationAttributes annoAttrs = AnnotationAttributes.fromMap(annotationMetadata.getAnnotationAttributes(EnableRpcServer.class.getName()));
         if (annoAttrs != null){
             RemotingType remotingType = (RemotingType)annoAttrs.get("type");
+            RegisterType registerType = (RegisterType) annoAttrs.get("registerType");
             //加载所有配置
             ChooseConfig chooseConfig = new ChooseConfig();
             Config config = chooseConfig.getConfig(remotingType);
-            config.register(registry, Type.Server);
+            config.register(registry, Type.Server, registerType);
         }
     }
 

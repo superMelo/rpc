@@ -1,5 +1,6 @@
 package com.qyf.rpc.annotion;
 
+import com.qyf.rpc.eunm.RegisterType;
 import com.qyf.rpc.eunm.RemotingType;
 import com.qyf.rpc.register.api.RpcClientRegistrar;
 import org.springframework.context.annotation.Import;
@@ -19,4 +20,6 @@ public @interface EnableRpcClient {
     String value() default "";
 
     RemotingType type() default RemotingType.Netty;
+
+    RegisterType registerType() default RegisterType.Zk;
 }

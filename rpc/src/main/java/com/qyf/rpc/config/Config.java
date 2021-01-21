@@ -1,5 +1,6 @@
 package com.qyf.rpc.config;
 
+import com.qyf.rpc.eunm.RegisterType;
 import com.qyf.rpc.eunm.Type;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 
@@ -11,5 +12,5 @@ public interface Config {
 
      void loadServerConfig();
 
-     void register(BeanDefinitionRegistry registry, Type type);
+     void register(BeanDefinitionRegistry registry, Type type, RegisterType registerType);
 }

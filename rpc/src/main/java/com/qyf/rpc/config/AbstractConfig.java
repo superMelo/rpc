@@ -1,11 +1,15 @@
 package com.qyf.rpc.config;
 
 import com.google.common.collect.Maps;
+import com.qyf.rpc.discovery.redis.Publish;
+import com.qyf.rpc.discovery.redis.Subscribe;
 import com.qyf.rpc.discovery.redis.RedisServiceDiscovery;
 import com.qyf.rpc.discovery.redis.Subscribe;
 import com.qyf.rpc.discovery.zookeeper.ZkServiceDiscovery;
+import com.qyf.rpc.eunm.RegisterType;
 import com.qyf.rpc.eunm.Type;
 import com.qyf.rpc.proxy.RpcFactory;
+import com.qyf.rpc.register.redis.RedisRegister;
 import com.qyf.rpc.register.zookeeper.ZkConfig;
 import com.qyf.rpc.register.zookeeper.ZookeeperRegister;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -18,12 +22,12 @@ public abstract class AbstractConfig implements Config {
     public Map<String, Class> loadMap = Maps.newHashMap();
 
     @Override
-    public void register(BeanDefinitionRegistry registry, Type type) {
-        doRegister(registry, type);
+    public void register(BeanDefinitionRegistry registry, Type type, RegisterType registerType) {
+        doRegister(registry, type, registerType);
     }
 
-    private void doRegister(BeanDefinitionRegistry registry, Type type){
-        choose(type);
+    private void doRegister(BeanDefinitionRegistry registry, Type type, RegisterType registerType){
+        choose(type, registerType);
         loadMap.put("zkConfig", ZkConfig.class);
         loadMap.forEach((k, v) -> {
             BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(v);
@@ -32,23 +36,35 @@ public abstract class AbstractConfig implements Config {
         });
     }
 
-    private void choose(Type type){
-        if (type == Type.Client){
-            //加载rpcFactory
-            loadMap.put("rpcFactory", RpcFactory.class);
-            chooseServiceDiscovery();
-            loadClientConfig();
-        }else {
-            //加载注册
-            loadMap.put("register", ZookeeperRegister.class);
-            loadServerConfig();
+    private void choose(Type type, RegisterType registerType){
+        switch (type){
+            case Client:
+                //加载rpcFactory
+                loadMap.put("rpcFactory", RpcFactory.class);
+                chooseServiceDiscovery(registerType, type);
+                loadClientConfig();
+                break;
+            case Server:
+                //加载注册
+                loadMap.put("register", RedisRegister.class);
+                loadServerConfig();
+                break;
         }
     }
 
-    private void chooseServiceDiscovery(){
-        //加载服务发现
-//        loadMap.put("discovery", ZkServiceDiscovery.class);
-        loadMap.put("discovery", RedisServiceDiscovery.class);
-        loadMap.put("subscribe", Subscribe.class);
+    //加载服务发现
+    private void chooseServiceDiscovery(RegisterType registerType, Type type){
+        switch (registerType){
+            case Zk:
+                loadMap.put("discovery", ZkServiceDiscovery.class);
+                break;
+            case Redis:
+                if (type == Type.Client){
+                    loadMap.put("discovery", RedisServiceDiscovery.class);
+                }else {
+                    loadMap.put("publish", Publish.class);
+                }
+                break;
+        }
     }
 }
