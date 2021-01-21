@@ -42,7 +42,7 @@ public class RedisRegister extends AbstractRegister{
         list.add(url);
         //注册服务地址
         Map<String, AtomicInteger> serviceMap = RedisPubSub.serviceMap;
-        serviceMap.put(url, new AtomicInteger(0));
+        serviceMap.put(url, new AtomicInteger(1));
         //保存服务地址到redis
         client.set(REGISTRY_PATH_KEY, JSON.toJSONString(list));
         //发送消息，保持心跳

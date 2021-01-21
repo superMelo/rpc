@@ -69,6 +69,7 @@ public class RedisServiceDiscovery extends AbstractDiscovery{
         list.remove(node);
         addressList.clear();
         addressList.addAll(list);
+        jedis.set(REGISTRY_PATH_KEY, JSON.toJSONString(list));
     }
 
     @Override
@@ -92,7 +93,7 @@ public class RedisServiceDiscovery extends AbstractDiscovery{
         //保存到服务本地列表
         addressList.addAll(list);
         Map<String, AtomicInteger> serviceMap = RedisPubSub.serviceMap;
-        list.stream().forEach(s -> serviceMap.put(s, new AtomicInteger(0)));
+        list.stream().forEach(s -> serviceMap.put(s, new AtomicInteger(1)));
     }
 
 }
