@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.google.common.collect.Lists;
 import com.qyf.rpc.connection.ConnectManage;
 import com.qyf.rpc.discovery.AbstractDiscovery;
+import com.qyf.rpc.utils.ListUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class RedisServiceDiscovery extends AbstractDiscovery{
         Map<String, AtomicInteger> serviceMap = RedisPubSub.serviceMap;
         ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
         service.scheduleWithFixedDelay(()->{
-            log.info("心跳监测");
+            log.info("5秒一次心跳监测");
             serviceMap.forEach((k, v)->{
                 if (v.intValue() == 0){
                     log.info(k + ":连接断开");
@@ -93,7 +94,7 @@ public class RedisServiceDiscovery extends AbstractDiscovery{
         });
         //给每个服务加上监听
         Map<String, AtomicInteger> serviceMap = RedisPubSub.serviceMap;
-        addressList.forEach((k, v)-> v.stream().forEach(s -> serviceMap.put(k + ":" + s, new AtomicInteger(1))));
+        addressList.forEach((k, v)-> v.stream().forEach(s -> serviceMap.put(k + "-" + s, new AtomicInteger(1))));
     }
 
     private void deleteNode(String node){
@@ -102,11 +103,12 @@ public class RedisServiceDiscovery extends AbstractDiscovery{
         Map<String, Object> serviceMap = JSON.parseObject(jsonStr, Map.class);
         CopyOnWriteArrayList<String> sets = toCopyOnWriteArrayList(serviceMap.get(strs[0]));
         synchronized (sets){
-            if (sets != null){
+            if (!ListUtils.emtry(sets)){
                 sets.remove(strs[1]);
                 serviceMap.put(strs[0], sets);
                 jedis.set(REGISTRY_PATH_KEY, JSON.toJSONString(serviceMap));
                 addressList.put(strs[0], sets);
+                RedisPubSub.serviceMap.remove(node);
             }
         }
     }
