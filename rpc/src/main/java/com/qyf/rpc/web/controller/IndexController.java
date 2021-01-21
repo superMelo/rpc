@@ -1,10 +1,9 @@
-package com.qyf.rpc.web.consumer.controller;
+package com.qyf.rpc.web.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.qyf.rpc.utils.IdUtil;
-import com.qyf.rpc.web.consumer.entity.InfoUser;
-import com.qyf.rpc.web.consumer.service.InfoUserService;
-
+import com.qyf.rpc.web.entity.InfoUser;
+import com.qyf.rpc.web.service.InfoUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +15,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
 
-
-//@Controller
+@Controller
 public class IndexController {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());

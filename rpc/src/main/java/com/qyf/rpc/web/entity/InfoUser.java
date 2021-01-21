@@ -1,5 +1,4 @@
-package com.qyf.rpc.web.consumer.entity;
-
+package com.qyf.rpc.web.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,10 +11,9 @@ public class InfoUser {
 
 
 
-	private String id;
+    private String id;
 
     private String name;
 
     private String address;
 }
-

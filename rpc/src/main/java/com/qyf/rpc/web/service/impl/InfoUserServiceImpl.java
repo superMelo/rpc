@@ -1,10 +1,10 @@
-package com.qyf.rpc.web.provider.service.impl;
+package com.qyf.rpc.web.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.qyf.rpc.annotion.RpcService;
-import com.qyf.rpc.web.provider.entity.InfoUser;
-import com.qyf.rpc.web.provider.service.InfoUserService;
+import com.qyf.rpc.web.entity.InfoUser;
+import com.qyf.rpc.web.service.InfoUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +13,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
 
 @RpcService
 public class InfoUserServiceImpl implements InfoUserService {
