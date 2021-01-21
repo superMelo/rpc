@@ -59,7 +59,7 @@ public class RedisRegister extends AbstractRegister{
         //保存服务地址到redis
         client.set(REGISTRY_PATH_KEY, JSON.toJSONString(map));
         //发送消息，保持心跳
-        url = className + ":" + url;
+        url = className + "-" + url;
         publish.publish(url);
     }
 
