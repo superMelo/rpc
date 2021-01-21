@@ -34,7 +34,7 @@ public class HttpClient{
 
 
     private HttpGet get(Request request) throws Exception{
-        String url = (String) connectManage.select();
+        String url = (String) connectManage.select(request);
         String[] strings = url.split(":");
         String className = request.getClassName();
         String[] classNames = className.split("\\.");

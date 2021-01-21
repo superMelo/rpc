@@ -16,4 +16,6 @@ public class Request {
 
     private Object[] parameters; //参数列表
 
+    private String serverName;
+
 }

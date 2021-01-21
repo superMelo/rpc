@@ -61,7 +61,7 @@ public class ZkServiceDiscovery extends AbstractDiscovery {
         logger.info("/rpc子节点数据为:{}", JSONObject.toJSONString(nodes));
         for(String node:nodes){
             String address = new String(curator.getData().forPath(ZK_REGISTRY_PATH + "/" + node));
-            addressList.add(address);
+//            addressList.add(address);
         }
     }
 }

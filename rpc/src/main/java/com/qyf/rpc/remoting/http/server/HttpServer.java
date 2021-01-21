@@ -25,8 +25,11 @@ public class HttpServer extends AbstractServerProtocol implements HandlerInterce
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
-    @Value("${http.server.host}")
+    @Value("${rpc.server.url}")
     private String url;
+
+    @Value("${rpc.server.name}")
+    private String serverName;
 
     @Autowired
     private Register register;
@@ -36,9 +39,9 @@ public class HttpServer extends AbstractServerProtocol implements HandlerInterce
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        logger.info("服务地址:{}", url);
+        logger.info("服务地址和服务名称:{}", url + ":" + serverName);
         //注册服务
-        register.doRegister(url);
+        register.doRegister(url, serverName);
     }
 
     @Override

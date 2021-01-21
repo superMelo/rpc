@@ -24,20 +24,17 @@ public class ZookeeperRegister extends AbstractRegister{
 
 
     @Override
-    //注册
-    public void doRegister(String url) throws Exception{
+    public void doRegister(String url, String serverName) throws Exception {
         if (StringUtil.isNotEmpty(url)){
             if (curator != null){
                 //添加服务节点
-                createNode(url);
+                createNode(url, serverName);
             }
         }
     }
 
-
-
     @Override
-    public void createNode(String url) throws Exception{
+    public void createNode(String url, String serverName) throws Exception {
         Stat stat = curator.checkExists().forPath(REGISTRY_PATH);
         if (stat == null){
             curator.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(REGISTRY_PATH);
@@ -46,7 +43,6 @@ public class ZookeeperRegister extends AbstractRegister{
                     .forPath(REGISTRY_PATH + "/provider", url.getBytes(Charset.defaultCharset()));
         }
     }
-
 
 
 }

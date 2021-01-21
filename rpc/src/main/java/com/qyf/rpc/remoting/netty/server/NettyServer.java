@@ -23,12 +23,12 @@ public class NettyServer extends NettyServerProtocol implements InitializingBean
     private static final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
     private static final EventLoopGroup workerGroup = new NioEventLoopGroup(4);
 
-//    private Map<String, Object> serviceMap = new HashMap<>();
-//
-//    private Map<String, Method> methodMap = new HashMap<>();
 
     @Value("${rpc.server.address}")
     private String serverAddress;
+
+    @Value("${rpc.server.name}")
+    private String serverName;
 
     @Autowired
     private Register register;
@@ -65,7 +65,7 @@ public class NettyServer extends NettyServerProtocol implements InitializingBean
                 int port = Integer.parseInt(array[1]);
                 ChannelFuture cf = bootstrap.bind(host,port).sync();
                 logger.info("RPC 服务器启动.监听端口:"+port);
-                register.doRegister(serverAddress);
+                register.doRegister(serverAddress, serverName);
                 //等待服务端监听端口关闭
                 cf.channel().closeFuture().sync();
             } catch (Exception e) {

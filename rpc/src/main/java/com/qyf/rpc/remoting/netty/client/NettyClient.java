@@ -61,7 +61,7 @@ public class NettyClient {
     }
 
     public Object send(Request request) throws InterruptedException {
-        Channel channel = (Channel) manage.select();
+        Channel channel = (Channel) manage.select(request);
         if (channel != null && channel.isActive()){
             SynchronousQueue<Object> queue = handle.sendRequest(request, channel);
             Object result = queue.take();

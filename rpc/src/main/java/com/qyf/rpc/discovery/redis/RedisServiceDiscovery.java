@@ -10,6 +10,8 @@ import redis.clients.jedis.Jedis;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -26,6 +28,7 @@ public class RedisServiceDiscovery extends AbstractDiscovery{
     @Autowired
     private ConnectManage connectManage;
 
+    private static final String REGISTRY_PATH_KEY = "registry_path_key";
 
     @Override
     public void watchNode() throws Exception {
@@ -64,12 +67,19 @@ public class RedisServiceDiscovery extends AbstractDiscovery{
 
 
     private void deleteNode(String node){
-        String str = jedis.get(REGISTRY_PATH_KEY);
-        List<String> list = JSON.parseObject(str, List.class);
-        list.remove(node);
-        addressList.clear();
-        addressList.addAll(list);
-        jedis.set(REGISTRY_PATH_KEY, JSON.toJSONString(list));
+        String[] strs = node.split(":");
+        String jsonStr = jedis.get(REGISTRY_PATH_KEY);
+        Map<String, CopyOnWriteArrayList<String>> serviceMap = JSON.parseObject(jsonStr, Map.class);
+        CopyOnWriteArrayList<String> sets = serviceMap.get(strs[0]);
+        synchronized (sets){
+            if (sets != null){
+                sets.remove(strs[1]);
+                serviceMap.put(strs[0], sets);
+                jedis.set(REGISTRY_PATH_KEY, JSON.toJSONString(serviceMap));
+                addressList.clear();
+                addressList = serviceMap;
+            }
+        }
     }
 
     @Override
@@ -90,12 +100,14 @@ public class RedisServiceDiscovery extends AbstractDiscovery{
 
     //加载服务列表
     private void getNodeData(){
+        //获取redis的服务名称和地址
         String str = jedis.get(REGISTRY_PATH_KEY);
-        List<String> list = JSON.parseObject(str, List.class);
+        Map<String, CopyOnWriteArrayList<String>> map = JSON.parseObject(str, Map.class);
         //保存到服务本地列表
-        addressList.addAll(list);
+        addressList = map;
+        //给每个服务加上监听
         Map<String, AtomicInteger> serviceMap = RedisPubSub.serviceMap;
-        list.stream().forEach(s -> serviceMap.put(s, new AtomicInteger(1)));
+        addressList.forEach((k, v)-> v.stream().forEach(s -> serviceMap.put(k + ":" + s, new AtomicInteger(1))));
     }
 
 }
