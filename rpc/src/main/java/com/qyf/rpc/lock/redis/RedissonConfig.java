@@ -1,4 +1,4 @@
-package com.qyf.rpc.lock;
+package com.qyf.rpc.lock.redis;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;

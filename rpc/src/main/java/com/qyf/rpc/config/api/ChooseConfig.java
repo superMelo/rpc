@@ -1,10 +1,9 @@
-package com.qyf.rpc.config;
+package com.qyf.rpc.config.api;
 
 
 import com.qyf.rpc.config.http.HttpConfig;
 import com.qyf.rpc.config.netty.NettyConfig;
 import com.qyf.rpc.eunm.RemotingType;
-import com.qyf.rpc.eunm.Type;
 
 public class ChooseConfig {
 

@@ -1,18 +1,15 @@
 package com.qyf.rpc.register.redis;
 
 import com.alibaba.fastjson.JSON;
-import com.google.common.collect.Maps;
 import com.qyf.rpc.discovery.redis.Publish;
 import com.qyf.rpc.discovery.redis.RedisPubSub;
-import com.qyf.rpc.lock.RedisLock;
+import com.qyf.rpc.lock.redis.RedisLock;
 import com.qyf.rpc.register.api.AbstractRegister;
 import com.qyf.rpc.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;
 
 
-import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RedisRegister extends AbstractRegister{

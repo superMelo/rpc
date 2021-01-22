@@ -1,4 +1,4 @@
-package com.qyf.rpc.discovery;
+package com.qyf.rpc.discovery.api;
 
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.InitializingBean;

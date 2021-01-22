@@ -1,9 +1,7 @@
 package com.qyf.rpc.config.netty;
 
-import com.qyf.rpc.config.AbstractConfig;
+import com.qyf.rpc.config.api.AbstractConfig;
 import com.qyf.rpc.connection.netty.NettyConnectManage;
-import com.qyf.rpc.register.zookeeper.ZookeeperRegister;
-import com.qyf.rpc.remoting.http.server.HttpServer;
 import com.qyf.rpc.remoting.netty.NettyProtocol;
 import com.qyf.rpc.remoting.netty.client.NettyClient;
 import com.qyf.rpc.remoting.netty.handle.NettyClientHandle;

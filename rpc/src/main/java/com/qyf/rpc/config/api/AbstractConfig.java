@@ -1,4 +1,4 @@
-package com.qyf.rpc.config;
+package com.qyf.rpc.config.api;
 
 import com.google.common.collect.Maps;
 import com.qyf.rpc.discovery.redis.Publish;

@@ -1,8 +1,7 @@
 package com.qyf.rpc.remoting.netty.client;
 
 import com.alibaba.fastjson.JSONArray;
-import com.qyf.rpc.connection.AbstractConnectManage;
-import com.qyf.rpc.connection.ConnectManage;
+import com.qyf.rpc.connection.api.ConnectManage;
 import com.qyf.rpc.entity.Request;
 import com.qyf.rpc.entity.Response;
 import com.qyf.rpc.remoting.netty.codec.JSONDecoder;

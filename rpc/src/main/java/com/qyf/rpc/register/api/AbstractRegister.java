@@ -25,7 +25,9 @@ public abstract class AbstractRegister implements Register{
         if (StringUtil.isNotEmpty(service)){
             serviceMap = JSON.parseObject(service, Map.class);
             urls = serviceMap.get(className) != null ? RedisServiceDiscovery.toCopyOnWriteArrayList(serviceMap.get(className)) : urls;
-            urls.add(url);
+            if (!urls.contains(url)){
+                urls.add(url);
+            }
             serviceMap.put(className, urls);
         }else {
             serviceMap = Maps.newHashMap();

@@ -1,7 +1,7 @@
 package com.qyf.rpc.remoting.netty.handle;
 
 import com.alibaba.fastjson.JSON;
-import com.qyf.rpc.connection.AbstractConnectManage;
+import com.qyf.rpc.connection.api.AbstractConnectManage;
 import com.qyf.rpc.entity.Request;
 import com.qyf.rpc.entity.Response;
 import io.netty.channel.Channel;

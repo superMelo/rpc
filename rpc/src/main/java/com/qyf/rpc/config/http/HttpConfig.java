@@ -1,8 +1,7 @@
 package com.qyf.rpc.config.http;
 
-import com.qyf.rpc.config.AbstractConfig;
+import com.qyf.rpc.config.api.AbstractConfig;
 import com.qyf.rpc.connection.http.HttpConnectManage;
-import com.qyf.rpc.register.zookeeper.ZookeeperRegister;
 import com.qyf.rpc.remoting.http.HttpProtocol;
 import com.qyf.rpc.remoting.http.client.HttpClient;
 import com.qyf.rpc.remoting.http.server.HttpServer;

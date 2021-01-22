@@ -1,6 +1,6 @@
 package com.qyf.rpc.register.zookeeper;
 
-import com.qyf.rpc.lock.RedisLock;
+import com.qyf.rpc.lock.redis.RedisLock;
 import com.qyf.rpc.register.api.AbstractRegister;
 import com.qyf.rpc.utils.StringUtil;
 import org.apache.curator.framework.CuratorFramework;

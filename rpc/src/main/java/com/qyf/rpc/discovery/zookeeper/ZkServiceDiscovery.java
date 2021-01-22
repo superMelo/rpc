@@ -2,18 +2,14 @@ package com.qyf.rpc.discovery.zookeeper;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
-import com.qyf.rpc.connection.ConnectManage;
-import com.qyf.rpc.discovery.AbstractDiscovery;
+import com.qyf.rpc.connection.api.ConnectManage;
+import com.qyf.rpc.discovery.api.AbstractDiscovery;
 import org.apache.curator.framework.CuratorFramework;
-import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.apache.curator.framework.recipes.cache.TreeCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 

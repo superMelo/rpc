@@ -1,4 +1,4 @@
-package com.qyf.rpc.discovery;
+package com.qyf.rpc.discovery.api;
 
 public interface Discovery {
 

@@ -1,8 +1,7 @@
 package com.qyf.rpc.remoting.http.client;
 
 import com.alibaba.fastjson.JSON;
-import com.qyf.rpc.connection.ConnectManage;
-import com.qyf.rpc.connection.http.HttpConnectManage;
+import com.qyf.rpc.connection.api.ConnectManage;
 import com.qyf.rpc.entity.Request;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;

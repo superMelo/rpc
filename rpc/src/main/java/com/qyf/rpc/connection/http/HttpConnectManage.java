@@ -1,6 +1,6 @@
 package com.qyf.rpc.connection.http;
 
-import com.qyf.rpc.connection.AbstractConnectManage;
+import com.qyf.rpc.connection.api.AbstractConnectManage;
 import com.qyf.rpc.entity.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,8 +1,8 @@
 package com.qyf.rpc.register.api;
 
 import com.qyf.rpc.annotion.EnableRpcClient;
-import com.qyf.rpc.config.ChooseConfig;
-import com.qyf.rpc.config.Config;
+import com.qyf.rpc.config.api.ChooseConfig;
+import com.qyf.rpc.config.api.Config;
 import com.qyf.rpc.eunm.RegisterType;
 import com.qyf.rpc.eunm.RemotingType;
 import com.qyf.rpc.eunm.Type;

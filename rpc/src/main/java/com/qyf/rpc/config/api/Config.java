@@ -1,4 +1,4 @@
-package com.qyf.rpc.config;
+package com.qyf.rpc.config.api;
 
 import com.qyf.rpc.eunm.RegisterType;
 import com.qyf.rpc.eunm.Type;

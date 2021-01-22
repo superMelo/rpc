@@ -1,7 +1,7 @@
 package com.qyf.rpc.connection.netty;
 
 import com.google.common.collect.Sets;
-import com.qyf.rpc.connection.AbstractConnectManage;
+import com.qyf.rpc.connection.api.AbstractConnectManage;
 import com.qyf.rpc.entity.Request;
 import com.qyf.rpc.remoting.api.Protocol;
 import io.netty.channel.Channel;
@@ -14,7 +14,6 @@ import java.net.SocketAddress;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class NettyConnectManage extends AbstractConnectManage {
