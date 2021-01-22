@@ -1,6 +1,8 @@
 package com.qyf.rpc.remoting.api;
 
+import com.google.common.collect.Lists;
 import com.qyf.rpc.annotion.RpcService;
+import com.qyf.rpc.register.api.Register;
 import com.qyf.rpc.remoting.netty.NettyServerProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,5 +45,20 @@ public class AbstractServerProtocol implements ServerProtocol, ApplicationContex
             }
         }
         log.info("已加载全部服务接口:{}", serviceMap);
+    }
+
+    protected void loadService(Register register, String url){
+        Map<String, Object> serviceMap = AbstractServerProtocol.serviceMap;
+        List<String> list = Lists.newLinkedList();
+        serviceMap.forEach((k,v)-> list.add(k));
+        list.stream().forEach(obj -> {
+            try {
+                log.info("服务地址和服务名称:{}", url + ":" + obj);
+                //注册服务
+                register.doRegister(url, obj);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

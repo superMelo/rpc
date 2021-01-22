@@ -17,6 +17,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+
+
 public class NettyServer extends NettyServerProtocol implements InitializingBean {
 
     private static final Logger logger = LoggerFactory.getLogger(NettyServer.class);
@@ -34,6 +36,7 @@ public class NettyServer extends NettyServerProtocol implements InitializingBean
     private Register register;
 
     public void afterPropertiesSet() throws Exception {
+
         start();
     }
 
@@ -65,7 +68,8 @@ public class NettyServer extends NettyServerProtocol implements InitializingBean
                 int port = Integer.parseInt(array[1]);
                 ChannelFuture cf = bootstrap.bind(host,port).sync();
                 logger.info("RPC 服务器启动.监听端口:"+port);
-                register.doRegister(serverAddress, serverName);
+                loadService(register, serverAddress);
+//                register.doRegister(serverAddress, serverName);
                 //等待服务端监听端口关闭
                 cf.channel().closeFuture().sync();
             } catch (Exception e) {

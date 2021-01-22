@@ -12,9 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.nio.charset.Charset;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+
 
 public class ZookeeperRegister extends AbstractRegister{
 
@@ -46,7 +44,7 @@ public class ZookeeperRegister extends AbstractRegister{
             //创建服务接口目录
             curator.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(REGISTRY_PATH + "/" + className);
             //创建服务接口地址节点
-            curator.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL_SEQUENTIAL)
+            curator.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL)
                     .forPath(REGISTRY_PATH + "/" + className + "/" + url, url.getBytes(Charset.defaultCharset()));
         }else {
             //获取服务对应的可用地址
@@ -54,17 +52,17 @@ public class ZookeeperRegister extends AbstractRegister{
             if (clzPath != null){
                 Stat serviceUrl = curator.checkExists().forPath(REGISTRY_PATH + "/" + className + "/" + url);
                 if (serviceUrl == null){
-                    curator.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL_SEQUENTIAL)
+                    curator.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL)
                             .forPath(REGISTRY_PATH + "/" + className + "/" + url, url.getBytes(Charset.defaultCharset()));
                 }
             }
-//            else {
-//                //创建服务接口目录
-//                curator.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(REGISTRY_PATH + "/" + className);
-//                //创建服务接口地址节点
-//                curator.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL_SEQUENTIAL)
-//                        .forPath(REGISTRY_PATH + "/" + className + "/" + url, url.getBytes(Charset.defaultCharset()));
-//            }
+            else {
+                //创建服务接口目录
+                curator.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(REGISTRY_PATH + "/" + className);
+                //创建服务接口地址节点
+                curator.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL)
+                        .forPath(REGISTRY_PATH + "/" + className + "/" + url, url.getBytes(Charset.defaultCharset()));
+            }
         }
     }
 

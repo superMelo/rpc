@@ -1,10 +1,8 @@
 package com.qyf.rpc.remoting.http.server;
 
-import com.google.common.collect.Lists;
 import com.qyf.rpc.entity.Response;
 import com.qyf.rpc.register.api.Register;
 import com.qyf.rpc.remoting.api.AbstractServerProtocol;
-import com.qyf.rpc.remoting.api.ServerProtocol;
 import com.qyf.rpc.remoting.http.codec.HttpDecoder;
 import com.qyf.rpc.remoting.http.codec.HttpEncoder;
 import com.qyf.rpc.utils.ClassUtils;
@@ -18,7 +16,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,19 +36,7 @@ public class HttpServer extends AbstractServerProtocol implements HandlerInterce
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        Map<String, Object> serviceMap = AbstractServerProtocol.serviceMap;
-        List<String> list = Lists.newLinkedList();
-        serviceMap.forEach((k,v)-> list.add(k));
-        list.stream().forEach(obj -> {
-            try {
-                logger.info("服务地址和服务名称:{}", url + ":" + obj);
-                //注册服务
-                register.doRegister(url, obj);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-
+        loadService(register, url);
     }
 
     @Override
