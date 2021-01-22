@@ -29,8 +29,6 @@ public class NettyServer extends NettyServerProtocol implements InitializingBean
     @Value("${rpc.server.address}")
     private String serverAddress;
 
-    @Value("${rpc.server.name}")
-    private String serverName;
 
     @Autowired
     private Register register;
