@@ -3,6 +3,7 @@ package com.qyf.rpc.register.api;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.qyf.rpc.discovery.redis.RedisServiceDiscovery;
 import com.qyf.rpc.utils.StringUtil;
 
 import java.util.Map;
@@ -23,7 +24,7 @@ public abstract class AbstractRegister implements Register{
     protected void createService(String service, String url, String className){
         if (StringUtil.isNotEmpty(service)){
             serviceMap = JSON.parseObject(service, Map.class);
-            urls = serviceMap.get(url) != null ?  serviceMap.get(url): urls;
+            urls = serviceMap.get(className) != null ? RedisServiceDiscovery.toCopyOnWriteArrayList(serviceMap.get(className)) : urls;
             urls.add(url);
             serviceMap.put(className, urls);
         }else {

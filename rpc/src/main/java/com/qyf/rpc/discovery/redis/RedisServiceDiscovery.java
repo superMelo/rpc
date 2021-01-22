@@ -113,7 +113,7 @@ public class RedisServiceDiscovery extends AbstractDiscovery{
         }
     }
 
-    private CopyOnWriteArrayList<String> toCopyOnWriteArrayList(Object obj){
+    public static CopyOnWriteArrayList<String> toCopyOnWriteArrayList(Object obj){
         CopyOnWriteArrayList<String> list = Lists.newCopyOnWriteArrayList();
         for (Object o : (JSONArray)obj) {
             list.add((String) o);
