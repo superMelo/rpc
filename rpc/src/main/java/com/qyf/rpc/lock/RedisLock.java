@@ -15,12 +15,12 @@ public class RedisLock {
     @Autowired
     private RedissonClient redissonClient;
 
-    public void lock(String name){
+    private void lock(String name){
         RLock lock = redissonClient.getLock(name);
         lock.lock();
     }
 
-    public void unLock(String name){
+    private void unLock(String name){
         RLock lock = redissonClient.getLock(name);
         lock.unlock();
     }
