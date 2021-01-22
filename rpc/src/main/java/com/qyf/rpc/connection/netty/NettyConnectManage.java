@@ -29,6 +29,7 @@ public class NettyConnectManage extends AbstractConnectManage {
 
     @Override
     public void updateConnectServer(Map<String, CopyOnWriteArrayList<String>> addressList) {
+
 //        if (addressList.size()==0 || addressList==null){
 //            logger.error("没有可用的服务器节点, 全部服务节点已关闭!");
 //            for (final Object channel : channels) {

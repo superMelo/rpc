@@ -1,6 +1,7 @@
 package com.qyf.rpc.discovery.zookeeper;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import com.qyf.rpc.connection.ConnectManage;
 import com.qyf.rpc.discovery.AbstractDiscovery;
 import org.apache.curator.framework.CuratorFramework;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 //服务发现
 public class ZkServiceDiscovery extends AbstractDiscovery {
@@ -39,15 +41,17 @@ public class ZkServiceDiscovery extends AbstractDiscovery {
     @Override
     public void watchNode() throws Exception {
         PathChildrenCache cache = new PathChildrenCache(curator, ZK_REGISTRY_PATH, true);
-        List<String> nodes = curator.getChildren().forPath(ZK_REGISTRY_PATH);
+        //获取所有服务接口
+        List<String> services = curator.getChildren().forPath(ZK_REGISTRY_PATH);
         cache.getListenable().addListener((curatorFramework, event) -> {
             logger.info("监听到子节点数据变化{}", JSONObject.toJSONString(event.getInitialData()));
             addressList.clear();
             getNodeData(curator.getChildren().forPath(ZK_REGISTRY_PATH));
+//            getNodeData(curator.getChildren().forPath(ZK_REGISTRY_PATH));
             updateConnectedServer();
         });
         cache.start();
-        getNodeData(nodes);
+        getNodeData(services);
         logger.info("已发现服务列表...{}", JSONObject.toJSONString(addressList));
         updateConnectedServer();
     }
@@ -57,11 +61,22 @@ public class ZkServiceDiscovery extends AbstractDiscovery {
         connectManage.updateConnectServer(addressList);
     }
 
-    private void getNodeData(List<String> nodes) throws Exception {
-        logger.info("/rpc子节点数据为:{}", JSONObject.toJSONString(nodes));
-        for(String node:nodes){
-            String address = new String(curator.getData().forPath(ZK_REGISTRY_PATH + "/" + node));
+    private void getNodeData(List<String> services) throws Exception {
+
+//        logger.info("rpc-"+serviceName+"子节点数据为:{}", JSONObject.toJSONString(nodes));
+//        for(String node:nodes){
+//            String address = new String(curator.getData().forPath(ZK_REGISTRY_PATH + "/" + node));
 //            addressList.add(address);
-        }
+//        }
+        services.stream().forEach(service->{
+            try {
+                List<String> nodes = curator.getChildren().forPath(ZK_REGISTRY_PATH + "/" + service);
+                CopyOnWriteArrayList<String> list = Lists.newCopyOnWriteArrayList();
+                nodes.stream().forEach(s -> list.add(s));
+                addressList.put(service, list);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

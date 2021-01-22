@@ -9,6 +9,7 @@ import com.qyf.rpc.eunm.Type;
 import com.qyf.rpc.proxy.RpcFactory;
 import com.qyf.rpc.register.redis.RedisRegister;
 import com.qyf.rpc.register.zookeeper.ZkConfig;
+import com.qyf.rpc.register.zookeeper.ZookeeperRegister;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
@@ -53,7 +54,11 @@ public abstract class AbstractConfig implements Config {
     private void chooseServiceDiscovery(RegisterType registerType, Type type){
         switch (registerType){
             case Zk:
-                loadMap.put("discovery", ZkServiceDiscovery.class);
+                if (type == Type.Client){
+                    loadMap.put("discovery", ZkServiceDiscovery.class);
+                }else {
+                    loadMap.put("register", ZookeeperRegister.class);
+                }
                 break;
             case Redis:
                 if (type == Type.Client){

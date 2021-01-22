@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.nio.charset.Charset;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ZookeeperRegister extends AbstractRegister{
@@ -42,19 +43,28 @@ public class ZookeeperRegister extends AbstractRegister{
         if (stat == null){
             curator.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(REGISTRY_PATH);
             log.info("创建注册目录");
-            CopyOnWriteArrayList<String> urls = Lists.newCopyOnWriteArrayList();
-            urls.add(url);
-            String jsonStr = JSON.toJSONString(urls);
+            //创建服务接口目录
+            curator.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(REGISTRY_PATH + "/" + className);
+            //创建服务接口地址节点
             curator.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL_SEQUENTIAL)
-                    .forPath(REGISTRY_PATH + "/" + className, jsonStr.getBytes(Charset.defaultCharset()));
+                    .forPath(REGISTRY_PATH + "/" + className + "/" + url, url.getBytes(Charset.defaultCharset()));
         }else {
             //获取服务对应的可用地址
-            String node = new String(curator.getData().forPath(REGISTRY_PATH + "/" + className));
-            CopyOnWriteArrayList list = JSON.parseObject(node, CopyOnWriteArrayList.class);
-            list.add(url);
-            String jsonStr = JSON.toJSONString(list);
-            curator.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL_SEQUENTIAL)
-                    .forPath(REGISTRY_PATH + "/" + className, jsonStr.getBytes(Charset.defaultCharset()));
+            Stat clzPath = curator.checkExists().forPath(REGISTRY_PATH + "/" + className);
+            if (clzPath != null){
+                Stat serviceUrl = curator.checkExists().forPath(REGISTRY_PATH + "/" + className + "/" + url);
+                if (serviceUrl == null){
+                    curator.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL_SEQUENTIAL)
+                            .forPath(REGISTRY_PATH + "/" + className + "/" + url, url.getBytes(Charset.defaultCharset()));
+                }
+            }
+//            else {
+//                //创建服务接口目录
+//                curator.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(REGISTRY_PATH + "/" + className);
+//                //创建服务接口地址节点
+//                curator.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL_SEQUENTIAL)
+//                        .forPath(REGISTRY_PATH + "/" + className + "/" + url, url.getBytes(Charset.defaultCharset()));
+//            }
         }
     }
 
