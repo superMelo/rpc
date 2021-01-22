@@ -6,6 +6,7 @@ import com.qyf.rpc.connection.ConnectManage;
 import com.qyf.rpc.discovery.AbstractDiscovery;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache;
+import org.apache.curator.framework.recipes.cache.TreeCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,13 +41,14 @@ public class ZkServiceDiscovery extends AbstractDiscovery {
 
     @Override
     public void watchNode() throws Exception {
-        PathChildrenCache cache = new PathChildrenCache(curator, ZK_REGISTRY_PATH, true);
+        TreeCache cache = new TreeCache(curator, ZK_REGISTRY_PATH);
         //获取所有服务接口
         List<String> services = curator.getChildren().forPath(ZK_REGISTRY_PATH);
         cache.getListenable().addListener((curatorFramework, event) -> {
-            logger.info("监听到子节点数据变化{}", JSONObject.toJSONString(event.getInitialData()));
+            List<String> list = curator.getChildren().forPath(ZK_REGISTRY_PATH);
+            logger.info("监听到子节点数据变化{}", JSONObject.toJSONString(list));
             addressList.clear();
-            getNodeData(curator.getChildren().forPath(ZK_REGISTRY_PATH));
+            getNodeData(list);
 //            getNodeData(curator.getChildren().forPath(ZK_REGISTRY_PATH));
             updateConnectedServer();
         });

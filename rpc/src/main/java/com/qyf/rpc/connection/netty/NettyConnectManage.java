@@ -1,5 +1,6 @@
 package com.qyf.rpc.connection.netty;
 
+import com.google.common.collect.Sets;
 import com.qyf.rpc.connection.AbstractConnectManage;
 import com.qyf.rpc.entity.Request;
 import com.qyf.rpc.remoting.api.Protocol;
@@ -26,22 +27,79 @@ public class NettyConnectManage extends AbstractConnectManage {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    @Override
+    public Object select(Request request) {
+        String className = request.getClassName();
+        List<String> list = addressList.get(className);
+        if (list.size()>0) {
+            int size = list.size();
+            int index = (roundRobin.getAndAdd(1) + size) % size;
+            String url = list.get(index);
+            String[] arr = url.split(":");
+            final SocketAddress remotePeer = new InetSocketAddress(arr[0], Integer.parseInt(arr[1]));
+            Channel channel = channelNodes.get(remotePeer);
+            return channel;
+        }else{
+            return null;
+        }
+
+    }
 
     @Override
     public void updateConnectServer(Map<String, CopyOnWriteArrayList<String>> addressList) {
+        this.addressList = addressList;
+        //判断是否存在服务
+        if (addressList.size()==0 || addressList==null){
+            logger.error("没有可用的服务器节点, 全部服务节点已关闭!");
+            for (final Object channel : channels) {
+                Channel c = (Channel) channel;
+                SocketAddress remotePeer = c.remoteAddress();
+                Channel handler_node = channelNodes.get(remotePeer);
+                handler_node.close();
+            }
+            channels.clear();
+            channelNodes.clear();
+            return;
+        }
 
-//        if (addressList.size()==0 || addressList==null){
-//            logger.error("没有可用的服务器节点, 全部服务节点已关闭!");
-//            for (final Object channel : channels) {
-//                Channel c = (Channel) channel;
-//                SocketAddress remotePeer = c.remoteAddress();
-//                Channel handler_node = channelNodes.get(remotePeer);
-//                handler_node.close();
-//            }
-//            channels.clear();
-//            channelNodes.clear();
-//            return;
-//        }
+        //获取所有服务地址
+        HashSet<SocketAddress> newAllServerNodeSet = Sets.newHashSet();
+        addressList.forEach((k, v) -> {
+            v.stream().forEach(node->{
+                String[] array = node.split(":");
+                if (array.length == 2) {
+                    String host = array[0];
+                    int port = Integer.parseInt(array[1]);
+                    final SocketAddress remotePeer = new InetSocketAddress(host, port);
+                    newAllServerNodeSet.add(remotePeer);
+                }
+            });
+        });
+
+        for (final SocketAddress serverNodeAddress : newAllServerNodeSet) {
+            Channel channel = channelNodes.get(serverNodeAddress);
+            if (channel != null && channel.isOpen()) {
+                logger.info("当前服务节点已存在,无需重新连接.{}", serverNodeAddress);
+            } else {
+                connectServerNode(serverNodeAddress);
+            }
+        }
+
+        for (int i = 0; i < channels.size(); ++i) {
+            Channel channel = (Channel) channels.get(i);
+            SocketAddress remotePeer = channel.remoteAddress();
+            if (!newAllServerNodeSet.contains(remotePeer)) {
+                logger.info("删除失效服务节点 " + remotePeer);
+                Channel channel_node = channelNodes.get(remotePeer);
+                if (channel_node != null) {
+                    channel_node.close();
+                }
+                channels.remove(channel);
+                channelNodes.remove(remotePeer);
+            }
+        }
+
+
 //        HashSet<SocketAddress> newAllServerNodeSet = new HashSet<>();
 //        for (int i = 0; i < addressList.size(); ++i) {
 //            String[] array = addressList.get(i).split(":");
@@ -74,6 +132,7 @@ public class NettyConnectManage extends AbstractConnectManage {
 //                channelNodes.remove(remotePeer);
 //            }
 //        }
+
     }
 
 
