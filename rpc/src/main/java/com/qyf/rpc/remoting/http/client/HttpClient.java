@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.net.ConnectException;
 import java.net.URI;
 
 /**
@@ -37,10 +38,10 @@ public class HttpClient{
         String url = (String) connectManage.select(request);
         String[] strings = url.split(":");
         String className = request.getClassName();
-        String[] classNames = className.split("\\.");
+//        String[] classNames = className.split("\\.");
         URI uri = new URIBuilder().setScheme("http")
                 .setHost(strings[0]).setPort(Integer.parseInt(strings[1])).setPath(request.getMethodName())
-                .setParameter("className", classNames[classNames.length - 1])
+                .setParameter("className", className)
                 .setParameter("methodName", request.getMethodName())
                 .setParameter("parameters", JSON.toJSONString(request.getParameters()))
 //                .setParameter("parameterTypes", JSON.toJSONString(request.getParameterTypes()))
@@ -62,12 +63,16 @@ public class HttpClient{
     }
 
     public Object send(Request request) throws Exception{
-        HttpGet httpGet = get(request);
-        CloseableHttpResponse response = client.execute(httpGet);
-        HttpEntity responseEntity = response.getEntity();
-        String resp = EntityUtils.toString(responseEntity);
-        log.info("http响应:{}", resp);
-        return resp;
+        try {
+            HttpGet httpGet = get(request);
+            CloseableHttpResponse response = client.execute(httpGet);
+            HttpEntity responseEntity = response.getEntity();
+            String resp = EntityUtils.toString(responseEntity);
+            log.info("http响应:{}", resp);
+            return resp;
+        }catch (Exception e){
+            throw new ConnectException("连接失败");
+        }
     }
 
 }

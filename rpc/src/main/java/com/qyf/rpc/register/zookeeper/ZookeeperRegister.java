@@ -19,6 +19,7 @@ public class ZookeeperRegister extends AbstractRegister{
 
     @Autowired
     private CuratorFramework curator;
+
     //zk服务注册目录
     protected static final String REGISTRY_PATH = "/rpc";
 
@@ -37,6 +38,7 @@ public class ZookeeperRegister extends AbstractRegister{
 
     @Override
     public void createNode(String url, String className) throws Exception {
+
         Stat stat = curator.checkExists().forPath(REGISTRY_PATH);
         if (stat == null){
             curator.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(REGISTRY_PATH);
