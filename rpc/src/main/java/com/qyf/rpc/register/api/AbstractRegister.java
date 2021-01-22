@@ -16,6 +16,10 @@ public abstract class AbstractRegister implements Register{
 
     protected  CopyOnWriteArrayList<String> urls = Lists.newCopyOnWriteArrayList();
 
+
+    protected static final String LOCK_NAME = "create_node";
+
+
     protected void createService(String service, String url, String className){
         if (StringUtil.isNotEmpty(service)){
             serviceMap = JSON.parseObject(service, Map.class);

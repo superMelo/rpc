@@ -25,7 +25,6 @@ public class ZookeeperRegister extends AbstractRegister{
     //zk服务注册目录
     protected static final String REGISTRY_PATH = "/rpc";
 
-    private static final String LOCK_NAME = "create_node";
 
     Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -42,8 +41,7 @@ public class ZookeeperRegister extends AbstractRegister{
 
     @Override
     public void createNode(String url, String className) throws Exception {
-        try {
-            redisLock.lock(LOCK_NAME);
+        redisLock.doLock(LOCK_NAME, ()->{
             Stat stat = curator.checkExists().forPath(REGISTRY_PATH);
             if (stat == null){
                 curator.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(REGISTRY_PATH);
@@ -71,9 +69,9 @@ public class ZookeeperRegister extends AbstractRegister{
                             .forPath(REGISTRY_PATH + "/" + className + "/" + url, url.getBytes(Charset.defaultCharset()));
                 }
             }
-        }finally {
-            redisLock.unLock(LOCK_NAME);
-        }
+        });
+
+
     }
 
 
