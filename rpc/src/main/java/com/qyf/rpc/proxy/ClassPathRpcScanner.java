@@ -1,15 +1,13 @@
 package com.qyf.rpc.proxy;
 
+import com.qyf.rpc.annotion.Reference;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
-import org.springframework.core.type.classreading.MetadataReader;
-import org.springframework.core.type.classreading.MetadataReaderFactory;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
-import org.springframework.core.type.filter.TypeFilter;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
@@ -69,11 +67,22 @@ public class ClassPathRpcScanner extends ClassPathBeanDefinitionScanner {
         for (BeanDefinitionHolder holder : beanDefinitions) {
 
             definition = (GenericBeanDefinition) holder.getBeanDefinition();
-            definition.getConstructorArgumentValues().addGenericArgumentValue(definition.getBeanClassName());
-            definition.setBeanClass(this.rpcFactoryBean.getClass());
+            String beanClassName = definition.getBeanClassName();
+            try {
+                Class<?> aClass = Class.forName(beanClassName);
+                Reference annotation = aClass.getAnnotation(Reference.class);
+                //判断是否有加注解，使用代理生成实现类
+                if (annotation != null){
+                    definition.getConstructorArgumentValues().addGenericArgumentValue(definition.getBeanClassName());
+                    definition.setBeanClass(this.rpcFactoryBean.getClass());
 
-            definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
-            System.out.println(holder);
+                    definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
+                    System.out.println(holder);
+                }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
