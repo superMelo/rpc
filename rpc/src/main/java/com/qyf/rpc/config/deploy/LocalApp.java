@@ -22,25 +22,11 @@ public class LocalApp implements ApplicationContextAware{
         this.applicationContext = applicationContext;
     }
 
-    public Object getBean(String name){
-        Object bean = applicationContext.getBean(name);
-        return bean;
-    }
-
     public void destoryBean(String beanName){
         BeanDefinitionRegistry beanDefReg = (DefaultListableBeanFactory) applicationContext.getAutowireCapableBeanFactory();
         beanDefReg.removeBeanDefinition(beanName);
     }
 
-    public void addBean(String beanName, Class beanClass){
-        BeanDefinitionRegistry beanDefReg = (DefaultListableBeanFactory) applicationContext.getAutowireCapableBeanFactory();
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(beanClass);
-        AbstractBeanDefinition beanDefinition = builder.getBeanDefinition();
-        beanDefinition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_NAME);
-        if (!beanDefReg.containsBeanDefinition(beanName)){
-            beanDefReg.registerBeanDefinition(beanName, beanDefinition);
-        }
-    }
 
     public void addBean(String beanName, Class beanClass, Object object){
         BeanDefinitionRegistry beanDefReg = (DefaultListableBeanFactory) applicationContext.getAutowireCapableBeanFactory();

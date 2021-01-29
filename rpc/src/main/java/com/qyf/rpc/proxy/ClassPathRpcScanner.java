@@ -16,7 +16,6 @@ import java.util.Set;
 //扫描指定路径扫描注解接口,生成代理类
 public class ClassPathRpcScanner extends ClassPathBeanDefinitionScanner {
 
-//    private RpcFactoryBean<?> rpcFactoryBean = new RpcFactoryBean<>();
 
     private Class<? extends Annotation> annotationClass;
     public void setAnnotationClass(Class<? extends Annotation> annotationClass) {
@@ -77,7 +76,6 @@ public class ClassPathRpcScanner extends ClassPathBeanDefinitionScanner {
 //                if (annotation != null){
                     definition.getConstructorArgumentValues().addGenericArgumentValue(definition.getBeanClassName());
                     definition.setBeanClass(RpcFactoryBean.class);
-
                     definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
                     System.out.println(holder);
 //                }
