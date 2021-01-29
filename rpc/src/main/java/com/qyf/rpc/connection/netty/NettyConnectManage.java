@@ -45,7 +45,7 @@ public class NettyConnectManage extends AbstractConnectManage {
     }
 
     @Override
-    public void updateConnectServer(Map<String, CopyOnWriteArrayList<String>> addressList) {
+    public synchronized void updateConnectServer(Map<String, CopyOnWriteArrayList<String>> addressList) {
         this.addressList = addressList;
         //判断是否存在服务
         if (addressList.size()==0 || addressList==null){
