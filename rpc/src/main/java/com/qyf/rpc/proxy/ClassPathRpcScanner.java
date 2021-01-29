@@ -68,7 +68,7 @@ public class ClassPathRpcScanner extends ClassPathBeanDefinitionScanner {
         for (BeanDefinitionHolder holder : beanDefinitions) {
 
             definition = (GenericBeanDefinition) holder.getBeanDefinition();
-            String beanClassName = definition.getBeanClassName();
+//            String beanClassName = definition.getBeanClassName();
 //            try {
 //                Class<?> aClass = Class.forName(beanClassName);
 //                Reference annotation = aClass.getAnnotation(Reference.class);
