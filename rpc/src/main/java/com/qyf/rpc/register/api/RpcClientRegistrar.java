@@ -1,6 +1,7 @@
 package com.qyf.rpc.register.api;
 
 import com.qyf.rpc.annotion.EnableRpcClient;
+import com.qyf.rpc.annotion.Reference;
 import com.qyf.rpc.config.api.ChooseConfig;
 import com.qyf.rpc.config.api.Config;
 import com.qyf.rpc.eunm.RegisterType;
@@ -33,7 +34,8 @@ public class RpcClientRegistrar implements ImportBeanDefinitionRegistrar{
 
             //生成代理类
             ClassPathRpcScanner scanner = new ClassPathRpcScanner(registry);
-            scanner.setAnnotationClass(null);
+            scanner.setAnnotationClass(Reference.class);
+//            scanner.setAnnotationClass(null);
             scanner.registerFilters();
             scanner.scan(StringUtils.tokenizeToStringArray(basePackage, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS));
         }
