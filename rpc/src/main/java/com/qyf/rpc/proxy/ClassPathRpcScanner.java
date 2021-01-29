@@ -44,6 +44,7 @@ public class ClassPathRpcScanner extends ClassPathBeanDefinitionScanner {
     public void registerFilters() {
         boolean acceptAllInterfaces = true;
 
+        //将自定义注解添加到扫描任务中
         if (this.annotationClass != null) {
             addIncludeFilter(new AnnotationTypeFilter(this.annotationClass));
             acceptAllInterfaces = false;
@@ -54,6 +55,7 @@ public class ClassPathRpcScanner extends ClassPathBeanDefinitionScanner {
                 return true;
             }));
         }
+        //将带有自定义注解的类 ，不加载到容器中
         addExcludeFilter((metadataReader, metadataReaderFactory)->{
             String className = metadataReader.getClassMetadata()
                     .getClassName();
@@ -68,20 +70,20 @@ public class ClassPathRpcScanner extends ClassPathBeanDefinitionScanner {
 
             definition = (GenericBeanDefinition) holder.getBeanDefinition();
             String beanClassName = definition.getBeanClassName();
-            try {
-                Class<?> aClass = Class.forName(beanClassName);
-                Reference annotation = aClass.getAnnotation(Reference.class);
-                //判断是否有加注解，使用代理生成实现类
-                if (annotation != null){
+//            try {
+//                Class<?> aClass = Class.forName(beanClassName);
+//                Reference annotation = aClass.getAnnotation(Reference.class);
+//                //判断是否有加注解，使用代理生成实现类
+//                if (annotation != null){
                     definition.getConstructorArgumentValues().addGenericArgumentValue(definition.getBeanClassName());
                     definition.setBeanClass(this.rpcFactoryBean.getClass());
 
                     definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
                     System.out.println(holder);
-                }
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+//                }
+//            } catch (ClassNotFoundException e) {
+//                e.printStackTrace();
+//            }
 
         }
     }
