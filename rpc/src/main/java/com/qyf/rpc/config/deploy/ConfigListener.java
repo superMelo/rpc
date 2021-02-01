@@ -9,6 +9,8 @@ import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ import java.util.Map;
 @Component
 public class ConfigListener implements InitializingBean, ApplicationContextAware{
 
+
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private CuratorFramework curatorFramework;
@@ -57,18 +61,20 @@ public class ConfigListener implements InitializingBean, ApplicationContextAware
             String[] names = path.split("/");
             String key = names[names.length - 1];
             String config= new String(event.getData().getData());
-            configs.put(key, config);
-            Class<?> aClass = Class.forName(key);
+//            configs.put(key, config);
+            Class<?> clz = Class.forName(key);
             //根据监听事件重新加载配置
-            Object bean = applicationContext.getBean(aClass);
-            String cfg = getField(aClass, bean);
+            Object bean = applicationContext.getBean(clz);
+            String localConfig = getField(clz, bean);
             Map<String, Object> map = JSON.parseObject(config, Map.class);
-            Map map1 = JSON.parseObject(cfg, Map.class);
-            if (map.equals(map1)){
+            Map<String, Object> localConfigMap = JSON.parseObject(localConfig, Map.class);
+            if (map.equals(localConfigMap)){
                 return;
             }
-            setField(aClass, bean);
-            Method[] declaredMethods = aClass.getDeclaredMethods();
+            //重新设置属性
+            setField(clz, bean);
+            Method[] declaredMethods = clz.getDeclaredMethods();
+            //循环获取配置的对象
             for (Method declaredMethod : declaredMethods) {
                 ConfigBean configBean = declaredMethod.getAnnotation(ConfigBean.class);
                 if (configBean != null){
@@ -81,20 +87,21 @@ public class ConfigListener implements InitializingBean, ApplicationContextAware
                             localApp.destroyBean(name);
                         }
                     }catch (Exception e){
-                        System.out.println(e);
+                        log.error("{}", e);
                     }
+                    //创建bean
                     localApp.addBean(name, returnType, bean);
                     //重新注入bean
                     String[] definitionNames = applicationContext.getBeanDefinitionNames();
-                    Object jedis = applicationContext.getBean(name);
+                    Object obj = applicationContext.getBean(name);
                     for (String definitionName : definitionNames) {
                         Object o = applicationContext.getBean(definitionName);
-                        Class<?> clz = o.getClass();
-                        Field[] declaredFields = clz.getDeclaredFields();
+                        Class<?> clzz = o.getClass();
+                        Field[] declaredFields = clzz.getDeclaredFields();
                         for (Field declaredField : declaredFields) {
                             if (declaredField.getType() == returnType){
                                 declaredField.setAccessible(true);
-                                declaredField.set(o, jedis);
+                                declaredField.set(o, obj);
                             }
                         }
                     }
@@ -105,9 +112,9 @@ public class ConfigListener implements InitializingBean, ApplicationContextAware
     }
 
     private void createRoot() throws Exception{
-        Stat stat = curatorFramework.checkExists().forPath("/config");
+        Stat stat = curatorFramework.checkExists().forPath(CONFIG_NAME);
         if (stat == null){
-            curatorFramework.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath("/config");
+            curatorFramework.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(CONFIG_NAME);
         }
     }
 
