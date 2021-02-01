@@ -23,7 +23,8 @@ public class LocalApp implements ApplicationContextAware{
         this.applicationContext = applicationContext;
     }
 
-    public void destoryBean(String beanName){
+    public void destroyBean(String beanName){
+
         BeanDefinitionRegistry beanDefReg = (DefaultListableBeanFactory) applicationContext.getAutowireCapableBeanFactory();
         beanDefReg.removeBeanDefinition(beanName);
     }

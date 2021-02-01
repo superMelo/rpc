@@ -78,7 +78,7 @@ public class ConfigListener implements InitializingBean, ApplicationContextAware
                     try {
                         Object obj = applicationContext.getBean(name);
                         if (obj != null){
-                            localApp.destoryBean(name);
+                            localApp.destroyBean(name);
                         }
                     }catch (Exception e){
                         System.out.println(e);

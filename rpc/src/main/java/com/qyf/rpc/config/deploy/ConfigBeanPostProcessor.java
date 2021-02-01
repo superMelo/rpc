@@ -56,7 +56,7 @@ public class ConfigBeanPostProcessor implements BeanPostProcessor {
                     //判断zk是否存在配置
                     if (config == null) {
                         //获取配置文件的配置
-                        Object o = getPropert(value);
+                        Object o = getProperty(value);
                         ReflectUtils.getObjByType(field, bean, o);
                         map.put(annotation.value(), o);
                     } else {
@@ -121,7 +121,7 @@ public class ConfigBeanPostProcessor implements BeanPostProcessor {
     }
 
     //从配置文件获取配置信息
-    private Object getPropert(String name) {
+    private Object getProperty(String name) {
         return env.getProperty(name);
     }
 
