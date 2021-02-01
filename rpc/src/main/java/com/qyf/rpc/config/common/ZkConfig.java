@@ -1,4 +1,4 @@
-package com.qyf.rpc.register.zookeeper;
+package com.qyf.rpc.config.common;
 
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 //@Configuration
 public class ZkConfig {
 
+//    @Value("${registry.address}")
     @Value("${registry.address}")
     private String registry;
 
@@ -20,7 +21,7 @@ public class ZkConfig {
 
     @Bean
     //连接zookeeper，获取zk客户端
-    public CuratorFramework getCuratorFramework(){
+    public CuratorFramework curatorFramework(){
         //重试策略，初试时间1秒，重试10次
         RetryPolicy policy = new ExponentialBackoffRetry(1000, 10);
         CuratorFramework curatorFramework = CuratorFrameworkFactory.builder().connectString(registry)
