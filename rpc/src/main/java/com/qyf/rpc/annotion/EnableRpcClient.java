@@ -19,7 +19,9 @@ public @interface EnableRpcClient {
     //指向的service路径
     String value() default "";
 
-    RemotingType type() default RemotingType.Netty;
+    //远程调用类型
+    RemotingType remotingType() default RemotingType.Netty;
 
+    //服务注册类型
     RegisterType registerType() default RegisterType.Zk;
 }
