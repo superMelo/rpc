@@ -18,7 +18,7 @@ public class RpcServerRegistrar implements ImportBeanDefinitionRegistrar {
         //通过zookeeper注册服务,建立netty服务端
         AnnotationAttributes annoAttrs = AnnotationAttributes.fromMap(annotationMetadata.getAnnotationAttributes(EnableRpcServer.class.getName()));
         if (annoAttrs != null){
-            RemotingType remotingType = (RemotingType)annoAttrs.get("type");
+            RemotingType remotingType = (RemotingType)annoAttrs.get("remotingType");
             RegisterType registerType = (RegisterType) annoAttrs.get("registerType");
             //加载所有配置
             ChooseConfig chooseConfig = new ChooseConfig();

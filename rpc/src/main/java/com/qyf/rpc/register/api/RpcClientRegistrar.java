@@ -25,7 +25,7 @@ public class RpcClientRegistrar implements ImportBeanDefinitionRegistrar{
         AnnotationAttributes annoAttrs = AnnotationAttributes.fromMap(importingClassMetadata.getAnnotationAttributes(EnableRpcClient.class.getName()));
         if (annoAttrs != null){
             String basePackage = (String)annoAttrs.get("value");
-            RemotingType type = (RemotingType) annoAttrs.get("type");
+            RemotingType type = (RemotingType) annoAttrs.get("remotingType");
             RegisterType registerType = (RegisterType) annoAttrs.get("registerType");
             //加载所有配置
             ChooseConfig chooseConfig = new ChooseConfig();
