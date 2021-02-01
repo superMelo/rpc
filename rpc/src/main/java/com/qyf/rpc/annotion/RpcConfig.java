@@ -8,5 +8,8 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Component
+/**
+ * 动态配置使用注解
+ */
 public @interface RpcConfig {
 }

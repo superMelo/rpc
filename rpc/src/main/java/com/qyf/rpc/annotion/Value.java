@@ -8,6 +8,9 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
+/**
+ * 配置属性使用注解
+ */
 public @interface Value {
     String value();
 }

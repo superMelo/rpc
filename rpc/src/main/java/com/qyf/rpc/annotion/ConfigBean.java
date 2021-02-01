@@ -6,5 +6,8 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
+/**
+ * 配置对象使用注解
+ */
 public @interface ConfigBean {
 }
