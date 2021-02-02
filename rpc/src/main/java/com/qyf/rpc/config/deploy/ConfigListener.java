@@ -90,7 +90,7 @@ public class ConfigListener implements InitializingBean, ApplicationContextAware
                         log.error("{}", e);
                     }
                     //创建bean
-                    localApp.addBean(name, returnType, bean);
+                    localApp.addBean(name, returnType, bean, declaredMethod);
                     //重新注入bean
                     String[] definitionNames = applicationContext.getBeanDefinitionNames();
                     Object obj = applicationContext.getBean(name);

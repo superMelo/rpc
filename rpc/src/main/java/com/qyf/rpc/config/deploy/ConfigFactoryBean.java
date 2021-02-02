@@ -7,23 +7,25 @@ import java.lang.reflect.Method;
 public class ConfigFactoryBean<T> implements FactoryBean{
     private Class<T> rpcInterface;
 
-    private Object targetObject;
+    private Method method;
+    private Object targetObj;
 
-
-    public ConfigFactoryBean(Class<T> rpcInterface, Object targetObject) {
+    public ConfigFactoryBean(Class<T> rpcInterface, Object targetObj, Method method) {
         this.rpcInterface = rpcInterface;
-        this.targetObject = targetObject;
+        this.method = method;
+        this.targetObj = targetObj;
     }
 
     public T getObject() throws Exception {
-        Class<?> clz = targetObject.getClass();
-        Method[] methods = clz.getDeclaredMethods();
-        T t = null;
-        for (Method method : methods) {
-            if (method.getAnnotation(ConfigBean.class) != null){
-                t = (T)method.invoke(targetObject);
-            }
-        }
+//        Class<?> clz = targetObject.getClass();
+//        Method[] methods = clz.getDeclaredMethods();
+//        T t = null;
+//        for (Method method : methods) {
+//            if (method.getAnnotation(ConfigBean.class) != null){
+//                t = (T)method.invoke(targetObject);
+//            }
+//        }
+        T t = (T)method.invoke(targetObj);
         return t;
     }
 

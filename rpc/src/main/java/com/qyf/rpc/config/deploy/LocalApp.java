@@ -11,6 +11,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Method;
+
 @Component
 public class LocalApp implements ApplicationContextAware{
 
@@ -23,21 +25,22 @@ public class LocalApp implements ApplicationContextAware{
         this.applicationContext = applicationContext;
     }
 
+    //注销bean
     public void destroyBean(String beanName){
-
         BeanDefinitionRegistry beanDefReg = (DefaultListableBeanFactory) applicationContext.getAutowireCapableBeanFactory();
         beanDefReg.removeBeanDefinition(beanName);
     }
 
-
-    public void addBean(String beanName, Class beanClass, Object object){
+    //创建bean
+    public void addBean(String beanName, Class beanClass, Object object, Method method){
         BeanDefinitionRegistry beanDefReg = (DefaultListableBeanFactory) applicationContext.getAutowireCapableBeanFactory();
         BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(beanClass);
         AbstractBeanDefinition beanDefinition = builder.getBeanDefinition();
         if (!beanDefReg.containsBeanDefinition(beanName)){
             ConstructorArgumentValues constructorArgumentValues = new ConstructorArgumentValues();
             constructorArgumentValues.addIndexedArgumentValue(0, beanClass);
-            constructorArgumentValues.addIndexedArgumentValue(1,object);
+            constructorArgumentValues.addIndexedArgumentValue(1, object);
+            constructorArgumentValues.addIndexedArgumentValue(2, method);
             beanDefinition.setBeanClass(ConfigFactoryBean.class);
             beanDefinition.setConstructorArgumentValues(constructorArgumentValues);
             beanDefinition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);

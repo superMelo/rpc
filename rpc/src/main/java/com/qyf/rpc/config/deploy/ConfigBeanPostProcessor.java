@@ -74,7 +74,7 @@ public class ConfigBeanPostProcessor implements BeanPostProcessor {
                     ConfigBean configBean = declaredMethod.getAnnotation(ConfigBean.class);
                     if (configBean != null) {
                         Class<?> returnType = declaredMethod.getReturnType();
-                        localApp.addBean(declaredMethod.getName(), returnType, bean);
+                        localApp.addBean(declaredMethod.getName(), returnType, bean, declaredMethod);
                     }
                 }
             } catch (Exception e) {
