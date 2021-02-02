@@ -17,7 +17,7 @@ import java.lang.annotation.*;
  */
 public @interface EnableRpcServer {
 
-    RemotingType type() default RemotingType.Netty;
+    RemotingType remotingType() default RemotingType.Netty;
 
     RegisterType registerType() default RegisterType.Zk;
 
