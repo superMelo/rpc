@@ -21,7 +21,6 @@ import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.util.Map;
 
-@Component
 public class ConfigBeanPostProcessor implements BeanPostProcessor {
 
     @Autowired
