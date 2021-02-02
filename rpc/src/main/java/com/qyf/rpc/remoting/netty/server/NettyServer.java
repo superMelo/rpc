@@ -17,6 +17,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 
 public class NettyServer extends NettyServerProtocol implements InitializingBean {
@@ -34,47 +36,41 @@ public class NettyServer extends NettyServerProtocol implements InitializingBean
     private Register register;
 
     public void afterPropertiesSet() throws Exception {
-
-        start();
+        ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
+        service.execute(() -> start());
     }
 
-    public void start(){
-
+    public void start() {
         final NettyServerHandle handler = new NettyServerHandle(this.serviceMap);
-
-        new Thread(() -> {
-            try {
-                ServerBootstrap bootstrap = new ServerBootstrap();
-                bootstrap.group(bossGroup,workerGroup).
-                        channel(NioServerSocketChannel.class).
-                        option(ChannelOption.SO_BACKLOG,1024).
-                        childOption(ChannelOption.SO_KEEPALIVE,true).
-                        childOption(ChannelOption.TCP_NODELAY,true).
-                        childHandler(new ChannelInitializer<SocketChannel>() {
-                            //创建NIOSocketChannel成功后，在进行初始化时，将它的ChannelHandler设置到ChannelPipeline中，用于处理网络IO事件
-                            protected void initChannel(SocketChannel channel) throws Exception {
-                                ChannelPipeline pipeline = channel.pipeline();
-                                pipeline.addLast(new IdleStateHandler(0, 0, 60));
-                                pipeline.addLast(new JSONEncoder());
-                                pipeline.addLast(new JSONDecoder());
-                                pipeline.addLast(handler);
-                            }
-                        });
-
-                String[] array = serverAddress.split(":");
-                String host = array[0];
-                int port = Integer.parseInt(array[1]);
-                ChannelFuture cf = bootstrap.bind(host,port).sync();
-                logger.info("RPC 服务器启动.监听端口:"+port);
-                loadService(register, serverAddress);
-//                register.doRegister(serverAddress, serverName);
-                //等待服务端监听端口关闭
-                cf.channel().closeFuture().sync();
-            } catch (Exception e) {
-                e.printStackTrace();
-                bossGroup.shutdownGracefully();
-                workerGroup.shutdownGracefully();
-            }
-        }).start();
+        try {
+            ServerBootstrap bootstrap = new ServerBootstrap();
+            bootstrap.group(bossGroup, workerGroup).
+                    channel(NioServerSocketChannel.class).
+                    option(ChannelOption.SO_BACKLOG, 1024).
+                    childOption(ChannelOption.SO_KEEPALIVE, true).
+                    childOption(ChannelOption.TCP_NODELAY, true).
+                    childHandler(new ChannelInitializer<SocketChannel>() {
+                        //创建NIOSocketChannel成功后，在进行初始化时，将它的ChannelHandler设置到ChannelPipeline中，用于处理网络IO事件
+                        protected void initChannel(SocketChannel channel) throws Exception {
+                            ChannelPipeline pipeline = channel.pipeline();
+                            pipeline.addLast(new IdleStateHandler(0, 0, 60));
+                            pipeline.addLast(new JSONEncoder());
+                            pipeline.addLast(new JSONDecoder());
+                            pipeline.addLast(handler);
+                        }
+                    });
+            String[] array = serverAddress.split(":");
+            String host = array[0];
+            int port = Integer.parseInt(array[1]);
+            ChannelFuture cf = bootstrap.bind(host, port).sync();
+            logger.info("RPC 服务器启动.监听端口:" + port);
+            loadService(register, serverAddress);
+            //等待服务端监听端口关闭
+            cf.channel().closeFuture().sync();
+        } catch (Exception e) {
+            e.printStackTrace();
+            bossGroup.shutdownGracefully();
+            workerGroup.shutdownGracefully();
+        }
     }
 }
