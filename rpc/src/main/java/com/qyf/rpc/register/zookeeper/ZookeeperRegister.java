@@ -61,17 +61,8 @@ public class ZookeeperRegister extends AbstractRegister{
                                 .forPath(REGISTRY_PATH + "/" + className + "/" + url, url.getBytes(Charset.defaultCharset()));
                     }
                 }
-                else {
-                    //创建服务接口目录
-                    curator.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(REGISTRY_PATH + "/" + className);
-                    //创建服务接口地址节点
-                    curator.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL)
-                            .forPath(REGISTRY_PATH + "/" + className + "/" + url, url.getBytes(Charset.defaultCharset()));
-                }
             }
         });
-
-
     }
 
 
