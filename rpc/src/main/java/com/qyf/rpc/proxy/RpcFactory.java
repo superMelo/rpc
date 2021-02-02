@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.qyf.rpc.entity.Request;
 import com.qyf.rpc.entity.Response;
+import com.qyf.rpc.exception.RpcException;
 import com.qyf.rpc.remoting.api.Protocol;
 import com.qyf.rpc.utils.IdUtil;
 import org.slf4j.Logger;
@@ -36,8 +37,9 @@ public class RpcFactory<T> implements InvocationHandler {
         Class<?> returnType = method.getReturnType();
 
         Response response = JSON.parseObject(result.toString(), Response.class);
-        if (response.getCode()==1){
-            throw new Exception(response.getError_msg());
+        if (response.getCode()==-1){
+            logger.error(response.getError_msg());
+            throw new RpcException(response.getError_msg());
         }
         if (returnType.isPrimitive() || String.class.isAssignableFrom(returnType)){
             return response.getData();

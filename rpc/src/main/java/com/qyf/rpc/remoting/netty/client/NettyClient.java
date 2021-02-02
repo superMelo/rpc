@@ -67,7 +67,7 @@ public class NettyClient {
             return JSONArray.toJSON(result);
         }else {
             Response res = new Response();
-            res.setCode(1);
+            res.setCode(-1);
             res.setError_msg("未正确连接到服务器.请检查相关配置信息!");
             return JSONArray.toJSON(res);
         }
