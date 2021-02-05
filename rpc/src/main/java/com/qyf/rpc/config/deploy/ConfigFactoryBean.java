@@ -17,14 +17,6 @@ public class ConfigFactoryBean<T> implements FactoryBean{
     }
 
     public T getObject() throws Exception {
-//        Class<?> clz = targetObject.getClass();
-//        Method[] methods = clz.getDeclaredMethods();
-//        T t = null;
-//        for (Method method : methods) {
-//            if (method.getAnnotation(ConfigBean.class) != null){
-//                t = (T)method.invoke(targetObject);
-//            }
-//        }
         T t = (T)method.invoke(targetObj);
         return t;
     }
