@@ -92,7 +92,7 @@ public class NettyServerHandle extends ChannelInboundHandlerAdapter {
         if (evt instanceof IdleStateEvent){
             IdleStateEvent event = (IdleStateEvent)evt;
             if (event.state()== IdleState.ALL_IDLE){
-                logger.info("客户端已超过60秒未读写数据,关闭连接.{}",ctx.channel().remoteAddress());
+//                logger.info("客户端已超过60秒未读写数据,关闭连接.{}",ctx.channel().remoteAddress());
 //                ctx.channel().close();
             }
         }else{
