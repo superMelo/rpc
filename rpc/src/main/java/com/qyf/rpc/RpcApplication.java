@@ -6,7 +6,7 @@ import com.qyf.rpc.eunm.RemotingType;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@EnableRpcServer(type = RemotingType.Http)
+@EnableRpcServer(remotingType = RemotingType.Http)
 //@EnableRpcClient(value = "com.qyf.rpc.web.consumer.service", type = RemotingType.Http)
 @SpringBootApplication
 public class RpcApplication {

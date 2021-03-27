@@ -91,7 +91,7 @@ public class IndexController {
 
     @RequestMapping("insertUser")
     @ResponseBody
-    public String insertUser(){
+    public String insertUser() throws Exception{
         Map<String, Object> map = new HashMap<>();
         map.put("id", "t1");
         map.put("name", "test");
