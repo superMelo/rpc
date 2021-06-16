@@ -15,24 +15,23 @@ import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.util.StringUtils;
 
-public class RpcClientRegistrar implements ImportBeanDefinitionRegistrar{
-
+public class RpcClientRegistrar implements ImportBeanDefinitionRegistrar {
 
 
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
-        //开启rpc，扫描接口生成代理类,并且建立netty客户端
-        AnnotationAttributes annoAttrs = AnnotationAttributes.fromMap(importingClassMetadata.getAnnotationAttributes(EnableRpcClient.class.getName()));
-        if (annoAttrs != null){
-            String basePackage = (String)annoAttrs.get("value");
-            RemotingType type = (RemotingType) annoAttrs.get("remotingType");
-            RegisterType registerType = (RegisterType) annoAttrs.get("registerType");
+        //开启rpc，扫描接口生成代理类,并且建立netty客户a端
+        AnnotationAttributes attrs = AnnotationAttributes.fromMap(importingClassMetadata.getAnnotationAttributes(EnableRpcClient.class.getName()));
+        if (attrs != null) {
+            String basePackage = (String) attrs.get("value");
+            RemotingType type = (RemotingType) attrs.get("remotingType");
+            RegisterType registerType = (RegisterType) attrs.get("registerType");
             //加载所有配置
             ChooseConfig chooseConfig = new ChooseConfig();
             Config config = chooseConfig.getConfig(type);
             config.register(registry, Type.Client, registerType);
 
-            //生成代理类
+            //使用scan根据包路径生成代理类
             ClassPathRpcScanner scanner = new ClassPathRpcScanner(registry);
             scanner.setAnnotationClass(Reference.class);
 //            scanner.setAnnotationClass(null);

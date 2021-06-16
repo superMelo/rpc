@@ -26,7 +26,7 @@ public abstract class AbstractConfig implements Config {
 
     private void doRegister(BeanDefinitionRegistry registry, Type type, RegisterType registerType){
         choose(type, registerType);
-        loadMap.put("zkConfig", ZkConfig.class);
+//        loadMap.put("zkConfig", ZkConfig.class);
         loadMap.forEach((k, v) -> {
             BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(v);
             GenericBeanDefinition definition = (GenericBeanDefinition) builder.getRawBeanDefinition();
